@@ -8,18 +8,23 @@
 </head>
 
 <body>
-    <label for="boxNumbers">Number of boxes to add</label>
-    <input type="number" id="boxNumbers" name="boxNumbers" min="1" max="10"> <br>
+    <label>Field size</label>
+    <label for="rowCount"></label>
+    <input type="number" id="rowCount" name="rowCount" min="5" max="25" value="5"> 
+    <label for="columnCount">x</label>
+    <input type="number" id="columnCount" name="columnCount" min="5" max="25" value="5">
 
     <button type="button" onclick="addBoxes()">
-        Add Boxes.
+        Create field
     </button> <br>
 
     <label for="boxSelector">Number of box to colorize</label>
-    <input type="number" id="boxSelector" name="boxSelector" min="1" max="10"> <br>
+    <input type="number" id="boxSelector" name="boxSelector" min="1" max="10">
     <button type="button" onclick="changeColorById()">
         ChangeColor.
-    </button> <br>
+    </button> <br>    
+
+    <div class="grid-container" id="mainGrid"></div>
 
     <script type="text/javascript" src="js/scripts.js"></script>
 </body>

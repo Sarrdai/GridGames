@@ -1,6 +1,11 @@
 const boxClass = "box"
 const boxName = "decoderTile"
 
+
+const noAsssassin = "noAsssassin";
+const singleAsssassin = "singleAsssassin";
+const multipleAssassin = "multipleAssassin";
+
 function colorizeDecoderTiles(boxIds, startIndex, indexCount, color) {
     let lastIndex = startIndex;
     for (let i = startIndex; i < startIndex + indexCount; i++) {
@@ -39,17 +44,20 @@ function updateDecoder() {
     let teamOneTileCounts = count * 0.36;
     let teamTwoTileCounts = teamOneTileCounts - 1;
 
-    let assassinCount = count * 0.04;
-
+    let assassinCount;
     switch (getAssassinSetting()) {
-        case "noAsssassin":
+        case noAsssassin:
             assassinCount = 0;
             break;
-        case "singleAsssassin":
+        case singleAsssassin:
             assassinCount = 1
             break;
+        case multipleAssassin:
+            assassinCount = count * 0.04;
+            break;
         default:
-        // code block
+            assassinCount = 1
+            break;
     }
 
 
@@ -84,6 +92,7 @@ function createGridcolumnsPropertyValue(columns) {
 function saveSettings(rowCount, columnCount) {
     localStorage.rowCount = Number(rowCount);
     localStorage.columnCount = Number(columnCount);
+    localStorage.assassinSetting = getAssassinSetting();
 }
 
 
@@ -94,6 +103,7 @@ function initialize() {
     if (localStorage.columnCount) {
         document.getElementById("columnCount").value = localStorage.columnCount;
     }
+    applyAssassinSetting();
     updateDecoder();
 }
 
@@ -108,4 +118,13 @@ function getAssassinSetting() {
     }
 
     return selectedSetting;
+}
+
+function applyAssassinSetting(){
+    let assassinSetupRadioGroup = document.getElementsByName("assassinSetup")
+    for (let i = 0; i < assassinSetupRadioGroup.length; i++) {
+        if(assassinSetupRadioGroup[i].value == localStorage.assassinSetting){
+            assassinSetupRadioGroup[i].checked = true;
+        }
+    }
 }

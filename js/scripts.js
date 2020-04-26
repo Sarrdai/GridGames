@@ -67,6 +67,7 @@ function updateDecoder() {
     let lastIndexTeamTwo = colorizeDecoderTiles(boxIds, lastIndexTeamOne + 1, teamTwoTileCounts, colors[1]);
     let lastIndexAssassin = colorizeDecoderTiles(boxIds, lastIndexTeamTwo + 1, Number(localStorage.assassinCount), "rgb(35, 37, 37)");
 
+    updateUrl();
     return false;
 }
 
@@ -88,6 +89,18 @@ function createGridcolumnsPropertyValue(columns, fractionPerColumn) {
 }
 
 function initialize() {
+
+    var rowCount = getUrlVars()["rowCount"];
+    var columnCount = getUrlVars()["columnCount"];
+    var assassinCount = getUrlVars()["assassinCount"];
+    var session = getUrlVars()["session"];
+    if(rowCount !== undefined && columnCount !== undefined && assassinCount != undefined && session != undefined){
+        localStorage.rowCount = rowCount;
+        localStorage.columnCount = columnCount;
+        localStorage.assassinCount = assassinCount;
+        localStorage.seedValue = session;
+    }
+
 
     let rowCountElement = document.getElementById("rowCount");
     if (localStorage.rowCount) {
@@ -163,5 +176,26 @@ function onRandomizeButtonClicked() {
     document.getElementById("seedValueInput").value = newSeed;
     onSeedValueChanged(newSeed);
 }
+
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+
+function updateUrl(){    
+    var url = new URL(window.location.href);
+    var search_params = url.searchParams;
+    search_params.set('rowCount', localStorage.rowCount);
+    search_params.set('columnCount', localStorage.columnCount);
+    search_params.set('assassinCount', localStorage.assassinCount);
+    search_params.set('session', localStorage.seedValue);
+    url.searchParams = search_params;
+    window.history.pushState({path:url.toString()},'',url.toString());
+}
+
+
 
 

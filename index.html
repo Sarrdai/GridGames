@@ -11,6 +11,15 @@
 
 <body onload="initialize()">
 
+<!--session area-->
+<h1>Game Session</h1>
+<div class="sliderContainer">
+    <input type="text" id="seedValueInput" name="seedValueInput" oninput="onSeedValueChanged(this.value)"
+        onchange="onSeedValueChanged(this.value)">
+    <br>
+    <button id="createRandomButton" onclick="onRandomizeButtonClicked()">Random Session</button>
+</div>
+
 <!-- config area-->
 <h1>Board Size</h1>
 <div class="sliderContainer">
@@ -31,13 +40,6 @@
         oninput="onAssassinCountInputChanged(this.value)" onchange="onAssassinCountInputChanged(this.value)">
 </div>
 
-<h1>Game Session</h1>
-<div class="sliderContainer">
-    <input type="text" id="seedValueInput" name="seedValueInput" oninput="onSeedValueChanged(this.value)"
-        onchange="onSeedValueChanged(this.value)">
-    <br>
-    <button id="createRandomButton" onclick="onRandomizeButtonClicked()">Random Session</button>
-</div>
 <!-- Show starting team -->
 <h1>Starting Team</h1>
 <div class="box centered" id="startingTeam"></div>

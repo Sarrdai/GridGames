@@ -12,26 +12,34 @@
 <body onload="initialize()"></body>
 
 <!-- config area-->
-<label>Field size</label>
+<label>Settings</label>
+
 <label for="rowCount"></label>
-<input type="number" id="rowCount" name="rowCount" min="5" max="25" value="5">
-<label for="columnCount">x</label>
-<input type="number" id="columnCount" name="columnCount" min="5" max="25" value="5">
-<input type="text" id="seedValueInput" name="seedValueInput">
+<div class="slidecontainer">
+<div id="rowCountText"></div><input type="range" min="3" max="25" value="5" class="slider" id="rowCount" oninput="onRowCountInputChanged(this.value)" onchange="onRowCountInputChanged(this.value)">
+</div>
+
+<label for="columnCount"></label>
+<div class="slidecontainer">
+    <div id="columnCountText"></div><input type="range" min="3" max="25" value="5" class="slider" id="columnCount" oninput="onColumnCountInputChanged(this.value)" onchange="onColumnCountInputChanged(this.value)">
+</div>
 
 <!-- assassin setup -->
 <br>
-<input type="radio" id="noAsssassin" name="assassinSetup" value="noAsssassin">
-<label for="male">No assassin</label><br>
-<input type="radio" id="singleAsssassin" name="assassinSetup" value="singleAsssassin" checked="checked">
-<label for="female">Single assassin</label><br>
-<input type="radio" id="multipleAssassin" name="assassinSetup" value="multipleAssassin">
-<label for="other">Scaled with field size</label>
+<input type="radio" id="noAsssassin" name="assassinSetup" value="noAsssassin" onclick="onAssassinRadioButtonChanged(this)">
+<label for="noAsssassin">No assassin</label><br>
+<input type="radio" id="singleAsssassin" name="assassinSetup" value="singleAsssassin" checked="checked" onclick="onAssassinRadioButtonChanged(this)">
+<label for="singleAsssassin">Single assassin</label><br>
+<input type="radio" id="multipleAssassin" name="assassinSetup" value="multipleAssassin" onclick="onAssassinRadioButtonChanged(this)">
+<label for="multipleAssassin">Scaled with field size</label>
 <br>
 
-<button type="button" onclick="updateDecoder()">
-    Create decoder
-</button> <br>
+<div>
+    <div>Create game session</div> <input type="text" id="seedValueInput" name="seedValueInput" oninput="onSeedValueChanged(this.value)" onchange="onSeedValueChanged(this.value)">
+</div>
+
+<button id="createRandomButton" onclick="onRandomizeButtonClicked()">Create random session</button> 
+<br>
 
 <!-- Show starting team -->
 <label>Starting Team: </label>

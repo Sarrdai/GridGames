@@ -6,6 +6,9 @@ const noAsssassin = "noAsssassin";
 const singleAsssassin = "singleAsssassin";
 const multipleAssassin = "multipleAssassin";
 
+const columnString = "Colums: "
+const rowString = "Row: "
+
 function colorizeDecoderTiles(boxIds, startIndex, indexCount, color) {
     let lastIndex = startIndex;
     for (let i = startIndex; i < startIndex + indexCount; i++) {
@@ -27,15 +30,9 @@ function updateDecoder() {
     let columnCount = document.getElementById("columnCount").value;
     let rowCount = document.getElementById("rowCount").value;
     let seedValue = document.getElementById("seedValueInput").value;
-    let myrng;
-    if(seedValue != ""){
-        myrng = new Math.seedrandom(seedValue);
-    }else{
-        myrng = new Math.seedrandom();
-    }
     
-    saveSettings(rowCount, columnCount, seedValue);
-
+    let myrng = new Math.seedrandom(seedValue);
+    
     let count = columnCount * rowCount;
     let grid = updateDecoderGrid(columnCount);
 
@@ -96,26 +93,30 @@ function createGridcolumnsPropertyValue(columns) {
     return config;
 }
 
-function saveSettings(rowCount, columnCount, seedValue) {
-    localStorage.rowCount = Number(rowCount);
-    localStorage.columnCount = Number(columnCount);
-    localStorage.seedValue = seedValue;
-    localStorage.assassinSetting = getAssassinSetting();
-}
-
-
 function initialize() {
+
+    let rowCountElement = document.getElementById("rowCount");
     if (localStorage.rowCount) {
-        document.getElementById("rowCount").value = localStorage.rowCount;
+         rowCountElement.value = localStorage.rowCount;        
     }
+    onRowCountInputChanged(rowCountElement.value)
+
+    let columnCountElement = document.getElementById("columnCount");
     if (localStorage.columnCount) {
-        document.getElementById("columnCount").value = localStorage.columnCount;
+        columnCountElement.value = localStorage.columnCount;
+        
     }
+    onColumnCountInputChanged(columnCountElement.value);
+
+    let seedValueElement = document.getElementById("seedValueInput");
     if (localStorage.seedValue) {
-        document.getElementById("seedValueInput").value = localStorage.seedValue;
+       seedValueElement.value = localStorage.seedValue;
+    }else{
+        seedValueElement.value = Math.random();
     }
+    onSeedValueChanged(seedValueElement.value);
+        
     applyAssassinSetting();
-    updateDecoder();
 }
 
 function getAssassinSetting() {
@@ -138,4 +139,37 @@ function applyAssassinSetting() {
             assassinSetupRadioGroup[i].checked = true;
         }
     }
+    updateDecoder();
 }
+
+function onRowCountInputChanged(value){
+    localStorage.rowCount = Number(value);
+    let rowCountText = document.getElementById("rowCountText");
+    rowCountText.innerText = rowString + value
+    updateDecoder();
+}
+
+function onColumnCountInputChanged(value){
+    localStorage.columnCount = Number(value);
+    let columnCountText = document.getElementById("columnCountText");
+    columnCountText.innerText = columnString + value
+    updateDecoder();
+}
+
+function onSeedValueChanged(value){
+    localStorage.seedValue = value;
+    updateDecoder();
+}
+
+function onAssassinRadioButtonChanged(value){
+    localStorage.assassinSetting = getAssassinSetting();
+    updateDecoder();
+}
+
+function onRandomizeButtonClicked(){
+    let newSeed = Math.random();
+    document.getElementById("seedValueInput").value = newSeed;
+    onSeedValueChanged(newSeed);
+}
+
+

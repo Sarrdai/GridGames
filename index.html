@@ -5,28 +5,42 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <title>My Website</title>
+    <script type="text/javascript" src="js/scripts.js"></script>
 </head>
 
-<body>
-    <label>Field size</label>
-    <label for="rowCount"></label>
-    <input type="number" id="rowCount" name="rowCount" min="5" max="25" value="5"> 
-    <label for="columnCount">x</label>
-    <input type="number" id="columnCount" name="columnCount" min="5" max="25" value="5">
+<body onload="initialize()"></body>
 
-    <button type="button" onclick="addBoxes()">
-        Create field
-    </button> <br>
+<!-- config area-->
+<label>Field size</label>
+<label for="rowCount"></label>
+<input type="number" id="rowCount" name="rowCount" min="5" max="25" value="5">
+<label for="columnCount">x</label>
+<input type="number" id="columnCount" name="columnCount" min="5" max="25" value="5">
 
-    <label for="boxSelector">Number of box to colorize</label>
-    <input type="number" id="boxSelector" name="boxSelector" min="1" max="10">
-    <button type="button" onclick="changeColorById()">
-        ChangeColor.
-    </button> <br>    
+<!-- assassin setup -->
+<br>
+<input type="radio" id="noAsssassin" name="assassinSetup" value="noAsssassin">
+<label for="male">No assassin</label><br>
+<input type="radio" id="singleAsssassin" name="assassinSetup" value="singleAsssassin" checked="checked">
+<label for="female">Single assassin</label><br>
+<input type="radio" id="multipleAssassin" name="assassinSetup" value="multipleAssassin">
+<label for="other">Scaled with field size</label>
+<br>
 
-    <div class="grid-container" id="mainGrid"></div>
+<button type="button" onclick="updateDecoder()">
+    Create decoder
+</button> <br>
 
-    <script type="text/javascript" src="js/scripts.js"></script>
+<!-- Show starting team -->
+<label>Starting Team: </label>
+<div class="box" , id="startingTeam"></div>
+<br>
+<br>
+
+<!-- decoder tiles -->
+<div class="grid-container" id="decoderGrid"></div>
+
+
 </body>
 
 </html>

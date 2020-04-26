@@ -30,11 +30,18 @@ function updateDecoder() {
     let columnCount = document.getElementById("columnCount").value;
     let rowCount = document.getElementById("rowCount").value;
     let seedValue = document.getElementById("seedValueInput").value;
-    
-    let myrng = new Math.seedrandom(seedValue);
-    
+
+    let myrng = new Math.seedrandom(seedValue.toUpperCase());
+
     let count = columnCount * rowCount;
-    let fractionPerColumn = 1/Math.max(columnCount, rowCount)
+
+    let height = document.documentElement.clientHeight;
+    let width = document.documentElement.clientWidth;
+
+    maxWidthInFr =(height / rowCount) / width;
+    maxHeightInFr = (width / columnCount) / height;
+
+    let fractionPerColumn = 0.8 * Math.min(maxWidthInFr, maxHeightInFr)
 
     let grid = updateDecoderGrid(columnCount, fractionPerColumn);
 
@@ -70,7 +77,7 @@ function updateDecoder() {
     colors = ["blue", "red"]
     colors.sort(function (a, b) { return 0.5 - myrng() });
     document.getElementById("startingTeam").style.backgroundColor = colors[0];
-
+    document.getElementById("decoderGrid").style.borderColor = colors[0];
     startIndex = 0;
     let lastIndexTeamOne = colorizeDecoderTiles(boxIds, startIndex, teamOneTileCounts, colors[0]);
     let lastIndexTeamTwo = colorizeDecoderTiles(boxIds, lastIndexTeamOne + 1, teamTwoTileCounts, colors[1]);
@@ -100,25 +107,25 @@ function initialize() {
 
     let rowCountElement = document.getElementById("rowCount");
     if (localStorage.rowCount) {
-         rowCountElement.value = localStorage.rowCount;        
+        rowCountElement.value = localStorage.rowCount;
     }
     onRowCountInputChanged(rowCountElement.value)
 
     let columnCountElement = document.getElementById("columnCount");
     if (localStorage.columnCount) {
         columnCountElement.value = localStorage.columnCount;
-        
+
     }
     onColumnCountInputChanged(columnCountElement.value);
 
     let seedValueElement = document.getElementById("seedValueInput");
     if (localStorage.seedValue) {
-       seedValueElement.value = localStorage.seedValue;
-    }else{
+        seedValueElement.value = localStorage.seedValue;
+    } else {
         seedValueElement.value = Math.random();
     }
     onSeedValueChanged(seedValueElement.value);
-        
+
     applyAssassinSetting();
 }
 
@@ -145,31 +152,31 @@ function applyAssassinSetting() {
     updateDecoder();
 }
 
-function onRowCountInputChanged(value){
+function onRowCountInputChanged(value) {
     localStorage.rowCount = Number(value);
     let rowCountText = document.getElementById("rowCountText");
     rowCountText.innerText = rowString + value
     updateDecoder();
 }
 
-function onColumnCountInputChanged(value){
+function onColumnCountInputChanged(value) {
     localStorage.columnCount = Number(value);
     let columnCountText = document.getElementById("columnCountText");
     columnCountText.innerText = columnString + value
     updateDecoder();
 }
 
-function onSeedValueChanged(value){
+function onSeedValueChanged(value) {
     localStorage.seedValue = value;
     updateDecoder();
 }
 
-function onAssassinRadioButtonChanged(value){
+function onAssassinRadioButtonChanged(value) {
     localStorage.assassinSetting = getAssassinSetting();
     updateDecoder();
 }
 
-function onRandomizeButtonClicked(){
+function onRandomizeButtonClicked() {
     let newSeed = Math.random();
     document.getElementById("seedValueInput").value = newSeed;
     onSeedValueChanged(newSeed);

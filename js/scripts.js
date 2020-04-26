@@ -26,10 +26,17 @@ function createBox(id) {
 function updateDecoder() {
     let columnCount = document.getElementById("columnCount").value;
     let rowCount = document.getElementById("rowCount").value;
-    saveSettings(rowCount, columnCount);
+    let seedValue = document.getElementById("seedValueInput").value;
+    let myrng;
+    if(seedValue != ""){
+        myrng = new Math.seedrandom(seedValue);
+    }else{
+        myrng = new Math.seedrandom();
+    }
+    
+    saveSettings(rowCount, columnCount, seedValue);
 
     let count = columnCount * rowCount;
-
     let grid = updateDecoderGrid(columnCount);
 
     let boxIds = [];
@@ -38,7 +45,7 @@ function updateDecoder() {
         let box = createBox(boxName + boxIndex);
         grid.appendChild(box);
         boxIds.push(box.id);
-        boxIds.sort(function (a, b) { return 0.5 - Math.random() });
+        boxIds.sort(function (a, b) { return 0.5 - myrng() });
     }
 
     let teamOneTileCounts = count * 0.36;
@@ -61,16 +68,16 @@ function updateDecoder() {
     }
 
 
-colors = ["blue", "red"]
-colors.sort(function (a, b) { return 0.5 - Math.random() });
-document.getElementById("startingTeam").style.backgroundColor = colors[0];
+    colors = ["blue", "red"]
+    colors.sort(function (a, b) { return 0.5 - myrng() });
+    document.getElementById("startingTeam").style.backgroundColor = colors[0];
 
-startIndex = 0;
-let lastIndexTeamOne = colorizeDecoderTiles(boxIds, startIndex, teamOneTileCounts, colors[0]);
-let lastIndexTeamTwo = colorizeDecoderTiles(boxIds, lastIndexTeamOne + 1, teamTwoTileCounts, colors[1]);
-let lastIndexAssassin = colorizeDecoderTiles(boxIds, lastIndexTeamTwo + 1, assassinCount, "black");
+    startIndex = 0;
+    let lastIndexTeamOne = colorizeDecoderTiles(boxIds, startIndex, teamOneTileCounts, colors[0]);
+    let lastIndexTeamTwo = colorizeDecoderTiles(boxIds, lastIndexTeamOne + 1, teamTwoTileCounts, colors[1]);
+    let lastIndexAssassin = colorizeDecoderTiles(boxIds, lastIndexTeamTwo + 1, assassinCount, "black");
 
-return false;
+    return false;
 }
 
 function updateDecoderGrid(columns) {
@@ -89,9 +96,10 @@ function createGridcolumnsPropertyValue(columns) {
     return config;
 }
 
-function saveSettings(rowCount, columnCount) {
+function saveSettings(rowCount, columnCount, seedValue) {
     localStorage.rowCount = Number(rowCount);
     localStorage.columnCount = Number(columnCount);
+    localStorage.seedValue = seedValue;
     localStorage.assassinSetting = getAssassinSetting();
 }
 
@@ -102,6 +110,9 @@ function initialize() {
     }
     if (localStorage.columnCount) {
         document.getElementById("columnCount").value = localStorage.columnCount;
+    }
+    if (localStorage.seedValue) {
+        document.getElementById("seedValueInput").value = localStorage.seedValue;
     }
     applyAssassinSetting();
     updateDecoder();
@@ -120,10 +131,10 @@ function getAssassinSetting() {
     return selectedSetting;
 }
 
-function applyAssassinSetting(){
+function applyAssassinSetting() {
     let assassinSetupRadioGroup = document.getElementsByName("assassinSetup")
     for (let i = 0; i < assassinSetupRadioGroup.length; i++) {
-        if(assassinSetupRadioGroup[i].value == localStorage.assassinSetting){
+        if (assassinSetupRadioGroup[i].value == localStorage.assassinSetting) {
             assassinSetupRadioGroup[i].checked = true;
         }
     }

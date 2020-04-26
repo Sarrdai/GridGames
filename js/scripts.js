@@ -34,7 +34,9 @@ function updateDecoder() {
     let myrng = new Math.seedrandom(seedValue);
     
     let count = columnCount * rowCount;
-    let grid = updateDecoderGrid(columnCount);
+    let fractionPerColumn = 1/Math.max(columnCount, rowCount)
+
+    let grid = updateDecoderGrid(columnCount, fractionPerColumn);
 
     let boxIds = [];
     for (let i = 0; i < count; i++) {
@@ -77,19 +79,20 @@ function updateDecoder() {
     return false;
 }
 
-function updateDecoderGrid(columns) {
+function updateDecoderGrid(columns, fractionPerColumn) {
     let grid = document.getElementById("decoderGrid");
     grid.innerHTML = "";
-    grid.style.gridTemplateColumns = createGridcolumnsPropertyValue(columns);
+    grid.style.gridTemplateColumns = createGridcolumnsPropertyValue(columns, fractionPerColumn);
     return grid;
 }
 
-function createGridcolumnsPropertyValue(columns) {
-    var config = "";
+function createGridcolumnsPropertyValue(columns, fractionPerColumn) {
+    /* var config = "";
     for (let i = 0; i < columns - 1; i++) {
         config += "1fr "
     }
-    config += "1fr"
+    config += "1fr" */
+    let config = `repeat( ${columns}, ${fractionPerColumn * 100}%)`;
     return config;
 }
 

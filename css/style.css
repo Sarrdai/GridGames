@@ -12,7 +12,12 @@
     padding-top: 0%;
   }
 
-.grid-container {
+/* .grid-container{
+  width: 80vh;
+  height: 80vh;
+} */
+
+.grid {
     display: grid;
     justify-content: center;
     align-items: start;

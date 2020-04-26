@@ -9,10 +9,10 @@
     <script type="text/javascript" src="js/scripts.js"></script>
 </head>
 
-<body onload="initialize()"></body>
+<body onload="initialize()">
 
 <!-- config area-->
-<h1>Board size</h1>
+<h1>Board Size</h1>
 <div class="sliderContainer">
     <label for="rowCount" id="rowCountText"></label><br>
     <input type="range" min="3" max="25" value="5" class="slider" id="rowCount"
@@ -20,31 +20,23 @@
 </div>
 <br>
 <div class="sliderContainer">
-<label for="columnCount" id="columnCountText"></label><br>
-<input type="range" min="3" max="25" value="5" class="slider" id="columnCount"
-    oninput="onColumnCountInputChanged(this.value)" onchange="onColumnCountInputChanged(this.value)">
+    <label for="columnCount" id="columnCountText"></label><br>
+    <input type="range" min="3" max="25" value="5" class="slider" id="columnCount"
+        oninput="onColumnCountInputChanged(this.value)" onchange="onColumnCountInputChanged(this.value)">
 </div>
-
-<h1>Assassins</h1>
-<!-- assassin setup -->
-<div class="sliderContainer">
-<input type="radio" id="noAsssassin" name="assassinSetup" value="noAsssassin"
-    onclick="onAssassinRadioButtonChanged(this)">
-<label for="noAsssassin">No assassin</label><br>
-<input type="radio" id="singleAsssassin" name="assassinSetup" value="singleAsssassin" checked="checked"
-    onclick="onAssassinRadioButtonChanged(this)">
-<label for="singleAsssassin">Single assassin</label><br>
-<input type="radio" id="multipleAssassin" name="assassinSetup" value="multipleAssassin"
-    onclick="onAssassinRadioButtonChanged(this)">
-<label for="multipleAssassin">Scaled with field size</label>
-</div>
-
-<h1>Game session</h1>
-<div class="sliderContainer">
-<input type="text" id="seedValueInput" name="seedValueInput" oninput="onSeedValueChanged(this.value)"
-    onchange="onSeedValueChanged(this.value)">
 <br>
-<button id="createRandomButton" onclick="onRandomizeButtonClicked()">Create random session</button>
+<div class="sliderContainer">
+    <label for="assassinCount" id="assassinCountText"></label><br>
+    <input type="range" min="0" max="5" value="1" class="slider" id="assassinCount"
+        oninput="onAssassinCountInputChanged(this.value)" onchange="onAssassinCountInputChanged(this.value)">
+</div>
+
+<h1>Game Session</h1>
+<div class="sliderContainer">
+    <input type="text" id="seedValueInput" name="seedValueInput" oninput="onSeedValueChanged(this.value)"
+        onchange="onSeedValueChanged(this.value)">
+    <br>
+    <button id="createRandomButton" onclick="onRandomizeButtonClicked()">Random Session</button>
 </div>
 <!-- Show starting team -->
 <h1>Starting Team</h1>
@@ -52,12 +44,10 @@
 
 <!-- decoder tiles -->
 <h1>Decoder</h1>
-    <div class="grid-container">
-        <div class="grid" id="decoderGrid"></div>
-    </div>
+<div class="grid-container">
+    <div class="grid" id="decoderGrid"></div>
+</div>
 
-
-
-    </body>
+</body>
 
 </html>

@@ -8,6 +8,7 @@ const multipleAssassin = "multipleAssassin";
 
 const columnString = "Colums: "
 const rowString = "Rows: "
+assassinString= "Assassins: "
 
 function colorizeDecoderTiles(boxIds, startIndex, indexCount, color) {
     let lastIndex = startIndex;
@@ -57,23 +58,6 @@ function updateDecoder() {
     let teamOneTileCounts = count * 0.36;
     let teamTwoTileCounts = teamOneTileCounts - 1;
 
-    let assassinCount;
-    switch (getAssassinSetting()) {
-        case noAsssassin:
-            assassinCount = 0;
-            break;
-        case singleAsssassin:
-            assassinCount = 1
-            break;
-        case multipleAssassin:
-            assassinCount = count * 0.04;
-            break;
-        default:
-            assassinCount = 1
-            break;
-    }
-
-
     colors = ["rgb(40, 122, 230)", "rgb(236, 76, 47)"]
     colors.sort(function (a, b) { return 0.5 - myrng() });
     document.getElementById("startingTeam").style.backgroundColor = colors[0];
@@ -81,7 +65,7 @@ function updateDecoder() {
     startIndex = 0;
     let lastIndexTeamOne = colorizeDecoderTiles(boxIds, startIndex, teamOneTileCounts, colors[0]);
     let lastIndexTeamTwo = colorizeDecoderTiles(boxIds, lastIndexTeamOne + 1, teamTwoTileCounts, colors[1]);
-    let lastIndexAssassin = colorizeDecoderTiles(boxIds, lastIndexTeamTwo + 1, assassinCount, "rgb(35, 37, 37)");
+    let lastIndexAssassin = colorizeDecoderTiles(boxIds, lastIndexTeamTwo + 1, Number(localStorage.assassinCount), "rgb(35, 37, 37)");
 
     return false;
 }
@@ -126,7 +110,11 @@ function initialize() {
     }
     onSeedValueChanged(seedValueElement.value);
 
-    applyAssassinSetting();
+    let assassinCountElement = document.getElementById("assassinCount");
+    if (localStorage.assassinCount) {
+        assassinCountElement.value = localStorage.assassinCount;
+    }
+    onAssassinCountInputChanged(assassinCountElement.value);
 }
 
 function getAssassinSetting() {
@@ -142,15 +130,6 @@ function getAssassinSetting() {
     return selectedSetting;
 }
 
-function applyAssassinSetting() {
-    let assassinSetupRadioGroup = document.getElementsByName("assassinSetup")
-    for (let i = 0; i < assassinSetupRadioGroup.length; i++) {
-        if (assassinSetupRadioGroup[i].value == localStorage.assassinSetting) {
-            assassinSetupRadioGroup[i].checked = true;
-        }
-    }
-    updateDecoder();
-}
 
 function onRowCountInputChanged(value) {
     localStorage.rowCount = Number(value);
@@ -166,13 +145,16 @@ function onColumnCountInputChanged(value) {
     updateDecoder();
 }
 
-function onSeedValueChanged(value) {
-    localStorage.seedValue = value;
+function onAssassinCountInputChanged(value) {
+    localStorage.assassinCount = Number(value);
+    let assassinCountText = document.getElementById("assassinCountText");
+    assassinCountText.innerText = assassinString + value
     updateDecoder();
 }
 
-function onAssassinRadioButtonChanged(value) {
-    localStorage.assassinSetting = getAssassinSetting();
+
+function onSeedValueChanged(value) {
+    localStorage.seedValue = value;
     updateDecoder();
 }
 

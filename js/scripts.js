@@ -7,7 +7,7 @@ const singleAsssassin = "singleAsssassin";
 const multipleAssassin = "multipleAssassin";
 
 const columnString = "Colums: "
-const rowString = "Row: "
+const rowString = "Rows: "
 
 function colorizeDecoderTiles(boxIds, startIndex, indexCount, color) {
     let lastIndex = startIndex;
@@ -74,14 +74,14 @@ function updateDecoder() {
     }
 
 
-    colors = ["blue", "red"]
+    colors = ["rgb(40, 122, 230)", "rgb(236, 76, 47)"]
     colors.sort(function (a, b) { return 0.5 - myrng() });
     document.getElementById("startingTeam").style.backgroundColor = colors[0];
     document.getElementById("decoderGrid").style.borderColor = colors[0];
     startIndex = 0;
     let lastIndexTeamOne = colorizeDecoderTiles(boxIds, startIndex, teamOneTileCounts, colors[0]);
     let lastIndexTeamTwo = colorizeDecoderTiles(boxIds, lastIndexTeamOne + 1, teamTwoTileCounts, colors[1]);
-    let lastIndexAssassin = colorizeDecoderTiles(boxIds, lastIndexTeamTwo + 1, assassinCount, "black");
+    let lastIndexAssassin = colorizeDecoderTiles(boxIds, lastIndexTeamTwo + 1, assassinCount, "rgb(35, 37, 37)");
 
     return false;
 }

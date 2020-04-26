@@ -13,9 +13,9 @@ h2 {
 }
 
 label{
-  font-size: large;
+  font-size: x-large;
   font-weight: bold;
-  color: azure;
+  color: rgb(240, 255, 253);
 }
 
 input[type=text], select {
@@ -75,6 +75,19 @@ button, select {
     border: 5px;
 }
 
+input[type=radio] {
+  border: 0px;
+  width: 10%;
+  height: 2em;
+}
+
+.sliderContainer{
+  display: block;
+  margin-left: auto;
+    margin-right: auto;
+    max-width: 10cm;
+}
+
 .slider {
   -webkit-appearance: none;
   width: 100%;
@@ -90,8 +103,8 @@ button, select {
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 25px;
-  height: 25px;
+  width: 2em;
+  height: 2em;
   border-radius: 50%; 
   background: azure;
   cursor: pointer;

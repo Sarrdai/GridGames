@@ -1,95 +1,28 @@
-const boxClass = "box"
-const boxName = "decoderTile"
-
-
-const noAsssassin = "noAsssassin";
-const singleAsssassin = "singleAsssassin";
-const multipleAssassin = "multipleAssassin";
-
 const columnString = "Colums: "
 const rowString = "Rows: "
-assassinString= "Assassins: "
-
-function colorizeDecoderTiles(boxIds, startIndex, indexCount, color) {
-    let lastIndex = startIndex;
-    for (let i = startIndex; i < startIndex + indexCount; i++) {
-        let selectedBox = document.getElementById(boxIds[i]);
-        selectedBox.style.backgroundColor = color;
-        lastIndex = i;
-    }
-    return lastIndex;
-}
-
-function createBox(id) {
-    var newBox = document.createElement("div");
-    newBox.setAttribute("class", boxClass)
-    newBox.setAttribute("id", id)
-    return newBox;
-}
+const assassinString= "Assassins: "
 
 function updateDecoder() {
     let columnCount = document.getElementById("columnCount").value;
     let rowCount = document.getElementById("rowCount").value;
     let seedValue = document.getElementById("seedValueInput").value;
 
-    let myrng = new Math.seedrandom(seedValue.toUpperCase());
-
-    let count = columnCount * rowCount;
-
-    let height = document.documentElement.clientHeight;
-    let width = document.documentElement.clientWidth;
-
-    maxWidthInFr =(height / rowCount) / width;
-    maxHeightInFr = (width / columnCount) / height;
-
-    let fractionPerColumn = 0.8 * Math.min(maxWidthInFr, maxHeightInFr)
-
-    let grid = updateDecoderGrid(columnCount, fractionPerColumn);
-
-    let boxIds = [];
-    for (let i = 0; i < count; i++) {
-        let boxIndex = i;
-        let box = createBox(boxName + boxIndex);
-        grid.appendChild(box);
-        boxIds.push(box.id);
-        boxIds.sort(function (a, b) { return 0.5 - myrng() });
-    }
-
-    let teamOneTileCounts = count * 0.36;
-    let teamTwoTileCounts = teamOneTileCounts - 1;
-
-    let computedStyle = getComputedStyle(document.documentElement);
-    colors = [computedStyle.getPropertyValue('--team1-color'), computedStyle.getPropertyValue('--team2-color')]
-    colors.sort(function (a, b) { return 0.5 - myrng() });
-    document.getElementById("startingTeam").style.backgroundColor = colors[0];
-    document.getElementById("decoderGrid").style.borderColor = colors[0];
-    startIndex = 0;
-    let lastIndexTeamOne = colorizeDecoderTiles(boxIds, startIndex, teamOneTileCounts, colors[0]);
-    let lastIndexTeamTwo = colorizeDecoderTiles(boxIds, lastIndexTeamOne + 1, teamTwoTileCounts, colors[1]);
-    let lastIndexAssassin = colorizeDecoderTiles(boxIds, lastIndexTeamTwo + 1, Number(localStorage.assassinCount), computedStyle.getPropertyValue('--assassin-color'));
+    let grid = createDecoder(columnCount, rowCount, seedValue)
+    let gridContainer = document.getElementById("decoder-grid-container");
+    gridContainer.innerHTML = "";
+    gridContainer.appendChild(grid);
 
     updateUrl();
     return false;
 }
 
-function updateDecoderGrid(columns, fractionPerColumn) {
-    let grid = document.getElementById("decoderGrid");
-    grid.innerHTML = "";
-    grid.style.gridTemplateColumns = createGridcolumnsPropertyValue(columns, fractionPerColumn);
-    return grid;
-}
-
-function createGridcolumnsPropertyValue(columns, fractionPerColumn) {
-    /* var config = "";
-    for (let i = 0; i < columns - 1; i++) {
-        config += "1fr "
-    }
-    config += "1fr" */
-    let config = `repeat( ${columns}, ${fractionPerColumn * 100}%)`;
-    return config;
-}
-
 function initialize() {
+
+    let computedStyle = getComputedStyle(document.documentElement);
+    var metaTag = document.createElement('meta');
+    metaTag.setAttribute('name', 'theme-color');
+    metaTag.content = `${computedStyle.getPropertyValue('--primary-color')}`;
+    document.getElementsByTagName('head')[0].appendChild(metaTag)
 
     var rowCount = getUrlVars()["rowCount"];
     var columnCount = getUrlVars()["columnCount"];

@@ -29,6 +29,7 @@ input[type=text], select {
     text-align: center;
     font-size: large;
     font-weight: bold;
+    cursor: pointer;
     /* box-shadow: 2px 2px 0px 0px var(--font-color); */
   }
 

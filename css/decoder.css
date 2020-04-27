@@ -1,0 +1,30 @@
+:root {
+    --civilian-color: rgba(249, 228, 183);
+    --team1-color: rgb(40, 122, 230);
+    --team2-color: rgb(236, 76, 47);
+    --assassin-color: rgb(35, 37, 37);
+  }
+
+  .decoderGrid {
+    display: grid;
+    justify-content: center;
+    align-items: start;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    border: 5px;
+
+    
+}
+
+.box {
+    background-color: var(--civilian-color);    
+    width: auto;    
+    padding-top: 100%;
+    border-radius: 7px;
+  }
+
+#startingTeam {
+    width: 50px;  
+    height: 50px;
+    padding-top: 0%;
+  }

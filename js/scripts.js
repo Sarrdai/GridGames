@@ -58,14 +58,15 @@ function updateDecoder() {
     let teamOneTileCounts = count * 0.36;
     let teamTwoTileCounts = teamOneTileCounts - 1;
 
-    colors = ["rgb(40, 122, 230)", "rgb(236, 76, 47)"]
+    let computedStyle = getComputedStyle(document.documentElement);
+    colors = [computedStyle.getPropertyValue('--team1-color'), computedStyle.getPropertyValue('--team2-color')]
     colors.sort(function (a, b) { return 0.5 - myrng() });
     document.getElementById("startingTeam").style.backgroundColor = colors[0];
     document.getElementById("decoderGrid").style.borderColor = colors[0];
     startIndex = 0;
     let lastIndexTeamOne = colorizeDecoderTiles(boxIds, startIndex, teamOneTileCounts, colors[0]);
     let lastIndexTeamTwo = colorizeDecoderTiles(boxIds, lastIndexTeamOne + 1, teamTwoTileCounts, colors[1]);
-    let lastIndexAssassin = colorizeDecoderTiles(boxIds, lastIndexTeamTwo + 1, Number(localStorage.assassinCount), "rgb(35, 37, 37)");
+    let lastIndexAssassin = colorizeDecoderTiles(boxIds, lastIndexTeamTwo + 1, Number(localStorage.assassinCount), computedStyle.getPropertyValue('--assassin-color'));
 
     updateUrl();
     return false;

@@ -29,22 +29,14 @@ function createBoard(columnCount, rowCount) {
     return boardGame;
 }
 
-function applyDecoderSeed(columnCount, rowCount, seedValue) {
+function applyDecoderSeed(tileCount, seedValue) {
 
-    let myrng = new Math.seedrandom(seedValue.toUpperCase());
+    let randomizedIndexes = getRandomIndexArray(tileCount, seedValue);
 
-    let grid = document.getElementById(boardgameId);
-    let count = columnCount * rowCount;
-    let randomizedIndexes = [];
-    for (let i = 0; i < count; i++) {
-        randomizedIndexes.push(i);
-    }
-    randomizedIndexes.sort(function (a, b) { return 0.5 - myrng() });
-
-    let teamOneTileCounts = Math.round(count * 0.36);
+    let teamOneTileCounts = Math.round(tileCount * 0.36);
     let teamTwoTileCounts = teamOneTileCounts - 1;
 
-    //load csv from js?
+    let myrng = new Math.seedrandom(seedValue.toUpperCase());
     let computedStyle = getComputedStyle(document.documentElement);
     colors = [computedStyle.getPropertyValue(team1PropertyName), computedStyle.getPropertyValue(team2PropertyName)]
     colors.sort(function (a, b) { return 0.5 - myrng() });
@@ -52,6 +44,7 @@ function applyDecoderSeed(columnCount, rowCount, seedValue) {
     //better way to return startingTeam color withouth knowlege of the outer elements
     document.getElementById("startingTeam").style.backgroundColor = colors[0];
 
+    let grid = document.getElementById(boardgameId);
     startIndex = 0;
     let lastIndexTeamOne = colorizeDecoderTiles(grid, randomizedIndexes, startIndex, teamOneTileCounts, colors[0]);
     let lastIndexTeamTwo = colorizeDecoderTiles(grid, randomizedIndexes, lastIndexTeamOne + 1, teamTwoTileCounts, colors[1]);
@@ -60,13 +53,29 @@ function applyDecoderSeed(columnCount, rowCount, seedValue) {
     return grid;
 }
 
-function applySessionId(columnCount, rowCount, seedValue) {
+
+function applySessionId(tileCount, session) {
+    
+    let textArray = []
     let grid = document.getElementById(boardgameId);
-
+    let randomizedIndexes = getRandomIndexArray(tileCount, session);
+    
     console.log("Applying board game here")
-
+    //applyTextToTiles(grid, randomizedIndexes, tileCount, textArray)
 
     return grid;
+}
+
+function getRandomIndexArray(count, seedValue){
+    let myrng = new Math.seedrandom(seedValue.toUpperCase());
+    
+    let indexArray = [];
+    for (let i = 0; i < count; i++) {
+        indexArray.push(i);
+    }
+
+    indexArray.sort(function (a, b) { return 0.5 - myrng() });
+    return indexArray;
 }
 
 function colorizeDecoderTiles(grid, randomizedIndexes, startIndex, indexCount, color) {
@@ -77,6 +86,13 @@ function colorizeDecoderTiles(grid, randomizedIndexes, startIndex, indexCount, c
         selectedBox.style.backgroundColor = color;
     }
     return lastIndex;
+}
+
+function applyTextToTiles(grid, randomizedIndexes, tileCount, textArray){
+    for(let i= 0; i < tileCount; i++){
+        let selectedBox = grid.childNodes[i];
+        selectedBox.textContent = randomizedIndexes[i];
+    }
 }
 
 function updateBoardGrid(columns, fractionPerColumn) {

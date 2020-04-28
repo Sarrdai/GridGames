@@ -6,6 +6,7 @@ function updateDecoder() {
     let columnCount = document.getElementById("columnCount").value;
     let rowCount = document.getElementById("rowCount").value;
     let decoderSeedValue = document.getElementById("decoderSeedValueInput").value;
+    let session = document.getElementById("sessionValueInput").value;
 
     let grid = createBoard(columnCount, rowCount);
     let gridContainer = document.getElementById("decoder-grid-container");
@@ -13,11 +14,11 @@ function updateDecoder() {
     gridContainer.appendChild(grid);
 
     if(localStorage.decoderSeedValue != ""){
-        applyDecoderSeed(columnCount, rowCount, decoderSeedValue);
+        applyDecoderSeed(columnCount * rowCount, decoderSeedValue);
     }
     
     if(localStorage.session != ""){
-        applySessionId(columnCount, rowCount, decoderSeedValue);
+        applySessionId(columnCount * rowCount, session);
     }
 
     updateUrl();
@@ -64,7 +65,7 @@ function initialize() {
     }
     onColumnCountInputChanged(columnCountElement.value);
 
-    //
+    
     let sessionValueElement = document.getElementById("sessionValueInput");
     if (localStorage.session) {
         sessionValueElement.value = localStorage.session;
@@ -73,7 +74,7 @@ function initialize() {
     }
     onSessionValueChanged(sessionValueElement.value);
 
-    //
+
     let decoderSeedValueElement = document.getElementById("decoderSeedValueInput");
     if (localStorage.decoderSeedValue) {
         decoderSeedValueElement.value = localStorage.decoderSeedValue;

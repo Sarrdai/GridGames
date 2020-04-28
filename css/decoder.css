@@ -21,6 +21,8 @@
     width: auto;    
     padding-top: 100%;
     border-radius: 7px;
+    text-align: center;
+    color: var(--font-color);
   }
 
 #startingTeam {

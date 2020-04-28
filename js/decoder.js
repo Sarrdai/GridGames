@@ -8,12 +8,12 @@ const team1PropertyName = "--team1-color";
 const team2PropertyName = "--team2-color";
 const assassinPropertyName = "--assassin-color";
 
-function createBoard(columnCount, rowCount){
+function createBoard(columnCount, rowCount) {
 
     let height = document.documentElement.clientHeight;
     let width = document.documentElement.clientWidth;
 
-    maxWidthInFr =(height / rowCount) / width;
+    maxWidthInFr = (height / rowCount) / width;
     maxHeightInFr = (width / columnCount) / height;
 
     let fractionPerColumn = 0.8 * Math.min(maxWidthInFr, maxHeightInFr)
@@ -23,21 +23,21 @@ function createBoard(columnCount, rowCount){
     let count = columnCount * rowCount;
     for (let i = 0; i < count; i++) {
         let box = createBox(boxName + i);
-        boardGame.appendChild(box);   
+        boardGame.appendChild(box);
     }
 
     return boardGame;
 }
 
-function createDecoder(columnCount, rowCount, seedValue) {
-    
+function applyDecoderSeed(columnCount, rowCount, seedValue) {
+
     let myrng = new Math.seedrandom(seedValue.toUpperCase());
-    
+
     let grid = document.getElementById(boardgameId);
     let count = columnCount * rowCount;
     let randomizedIndexes = [];
     for (let i = 0; i < count; i++) {
-        randomizedIndexes.push(i);        
+        randomizedIndexes.push(i);
     }
     randomizedIndexes.sort(function (a, b) { return 0.5 - myrng() });
 
@@ -51,7 +51,7 @@ function createDecoder(columnCount, rowCount, seedValue) {
 
     //better way to return startingTeam color withouth knowlege of the outer elements
     document.getElementById("startingTeam").style.backgroundColor = colors[0];
-    
+
     startIndex = 0;
     let lastIndexTeamOne = colorizeDecoderTiles(grid, randomizedIndexes, startIndex, teamOneTileCounts, colors[0]);
     let lastIndexTeamTwo = colorizeDecoderTiles(grid, randomizedIndexes, lastIndexTeamOne + 1, teamTwoTileCounts, colors[1]);
@@ -60,8 +60,17 @@ function createDecoder(columnCount, rowCount, seedValue) {
     return grid;
 }
 
+function applySessionId(columnCount, rowCount, seedValue) {
+    let grid = document.getElementById(boardgameId);
+
+    console.log("Applying board game here")
+
+
+    return grid;
+}
+
 function colorizeDecoderTiles(grid, randomizedIndexes, startIndex, indexCount, color) {
-    let lastIndex = startIndex + indexCount;        
+    let lastIndex = startIndex + indexCount;
     lastIndex = lastIndex > randomizedIndexes.length ? randomizedIndexes.length : lastIndex;
     for (let i = startIndex; i < lastIndex; i++) {
         let selectedBox = grid.childNodes[randomizedIndexes[i]];

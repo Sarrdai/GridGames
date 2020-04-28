@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" type="text/css" href="css/decoder.css">
     <link rel="stylesheet" type="text/css" href="css/input.css">
-    
+
     <!--scripts-->
     <script type="text/javascript" src="js/seedrandom.js"></script>
     <script type="text/javascript" src="js/decoder.js"></script>
@@ -18,44 +18,49 @@
 
 <body onload="initialize()">
 
-<!--session area-->
-<h1>Game Session</h1>
-<div class="sliderContainer">
-    <input type="text" id="seedValueInput" name="seedValueInput" oninput="onSeedValueChanged(this.value)"
-        onchange="onSeedValueChanged(this.value)">
+    <!--session area-->
+    <h1>Game Session</h1>
+    <div class="sliderContainer">
+        <input type="text" id="sessionValueInput" name="sessionValueInput" oninput="onSessionValueChanged(this.value)"
+            onchange="onSessionValueChanged(this.value)">
+        <br>
+        <button id="randomSessionButton" onclick="onRandomSessionButtonClicked()">Random Session</button>
+    </div>
+
+    <h1>Decoder Key</h1>
+    <div class="sliderContainer">
+        <input type="text" id="decoderSeedValueInput" name="decoderSeedValueInput"
+            oninput="onDecoderSeedValueChanged(this.value)" onchange="onDecoderSeedValueChanged(this.value)">
+    </div>
+    <!-- config area-->
+    <h1>Board Size</h1>
+    <div class="sliderContainer">
+        <label for="rowCount" id="rowCountText"></label><br>
+        <input type="range" min="3" max="25" value="5" class="slider" id="rowCount"
+            oninput="onRowCountInputChanged(this.value)" onchange="onRowCountInputChanged(this.value)">
+    </div>
     <br>
-    <button id="createRandomButton" onclick="onRandomizeButtonClicked()">Random Session</button>
-</div>
+    <div class="sliderContainer">
+        <label for="columnCount" id="columnCountText"></label><br>
+        <input type="range" min="3" max="25" value="5" class="slider" id="columnCount"
+            oninput="onColumnCountInputChanged(this.value)" onchange="onColumnCountInputChanged(this.value)">
+    </div>
+    <br>
+    <div class="sliderContainer">
+        <label for="assassinCount" id="assassinCountText"></label><br>
+        <input type="range" min="0" max="5" value="1" class="slider" id="assassinCount"
+            oninput="onAssassinCountInputChanged(this.value)" onchange="onAssassinCountInputChanged(this.value)">
+    </div>
 
-<!-- config area-->
-<h1>Board Size</h1>
-<div class="sliderContainer">
-    <label for="rowCount" id="rowCountText"></label><br>
-    <input type="range" min="3" max="25" value="5" class="slider" id="rowCount"
-        oninput="onRowCountInputChanged(this.value)" onchange="onRowCountInputChanged(this.value)">
-</div>
-<br>
-<div class="sliderContainer">
-    <label for="columnCount" id="columnCountText"></label><br>
-    <input type="range" min="3" max="25" value="5" class="slider" id="columnCount"
-        oninput="onColumnCountInputChanged(this.value)" onchange="onColumnCountInputChanged(this.value)">
-</div>
-<br>
-<div class="sliderContainer">
-    <label for="assassinCount" id="assassinCountText"></label><br>
-    <input type="range" min="0" max="5" value="1" class="slider" id="assassinCount"
-        oninput="onAssassinCountInputChanged(this.value)" onchange="onAssassinCountInputChanged(this.value)">
-</div>
+    <!-- Show starting team -->
+    <h1>Starting Team</h1>
+    <div class="box centered" id="startingTeam"></div>
 
-<!-- Show starting team -->
-<h1>Starting Team</h1>
-<div class="box centered" id="startingTeam"></div>
+    <!-- decoder tiles -->
+    <h1>Decoder</h1>
+    <div class="grid-container" id="decoder-grid-container">
 
-<!-- decoder tiles -->
-<h1>Decoder</h1>
-<div class="grid-container" id="decoder-grid-container">
-    
-</div>
+    </div>
 
 </body>
 

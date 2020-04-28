@@ -5,14 +5,20 @@ const assassinString= "Assassins: "
 function updateDecoder() {
     let columnCount = document.getElementById("columnCount").value;
     let rowCount = document.getElementById("rowCount").value;
-    let seedValue = document.getElementById("seedValueInput").value;
+    let decoderSeedValue = document.getElementById("decoderSeedValueInput").value;
 
     let grid = createBoard(columnCount, rowCount);
     let gridContainer = document.getElementById("decoder-grid-container");
     gridContainer.innerHTML = "";
     gridContainer.appendChild(grid);
 
-    createDecoder(columnCount, rowCount, seedValue)
+    if(localStorage.decoderSeedValue != ""){
+        applyDecoderSeed(columnCount, rowCount, decoderSeedValue);
+    }
+    
+    if(localStorage.session != ""){
+        applySessionId(columnCount, rowCount, decoderSeedValue);
+    }
 
     updateUrl();
     return false;
@@ -29,14 +35,21 @@ function initialize() {
     var rowCount = getUrlVars()["rowCount"];
     var columnCount = getUrlVars()["columnCount"];
     var assassinCount = getUrlVars()["assassinCount"];
+    var decoderSeedValue = getUrlVars()["decoderSeedValue"];
     var session = getUrlVars()["session"];
-    if(rowCount !== undefined && columnCount !== undefined && assassinCount != undefined && session != undefined){
+    if(rowCount !== undefined && columnCount !== undefined && assassinCount != undefined){
         localStorage.rowCount = rowCount;
         localStorage.columnCount = columnCount;
-        localStorage.assassinCount = assassinCount;
-        localStorage.seedValue = session;
+        localStorage.assassinCount = assassinCount;        
     }
 
+    if(session != undefined){
+        localStorage.session = session;
+    }
+
+    if(decoderSeedValue != undefined){
+        localStorage.decoderSeedValue = decoderSeedValue;
+    }
 
     let rowCountElement = document.getElementById("rowCount");
     if (localStorage.rowCount) {
@@ -51,13 +64,21 @@ function initialize() {
     }
     onColumnCountInputChanged(columnCountElement.value);
 
-    let seedValueElement = document.getElementById("seedValueInput");
-    if (localStorage.seedValue) {
-        seedValueElement.value = localStorage.seedValue;
+    //
+    let sessionValueElement = document.getElementById("sessionValueInput");
+    if (localStorage.session) {
+        sessionValueElement.value = localStorage.session;
     } else {
-        seedValueElement.value = Math.random();
+        sessionValueElement.value = Math.random();
     }
-    onSeedValueChanged(seedValueElement.value);
+    onSessionValueChanged(sessionValueElement.value);
+
+    //
+    let decoderSeedValueElement = document.getElementById("decoderSeedValueInput");
+    if (localStorage.decoderSeedValue) {
+        decoderSeedValueElement.value = localStorage.decoderSeedValue;
+    }
+    onDecoderSeedValueChanged(decoderSeedValueElement.value);
 
     let assassinCountElement = document.getElementById("assassinCount");
     if (localStorage.assassinCount) {
@@ -101,16 +122,20 @@ function onAssassinCountInputChanged(value) {
     updateDecoder();
 }
 
-
-function onSeedValueChanged(value) {
-    localStorage.seedValue = value;
+function onDecoderSeedValueChanged(value){
+    localStorage.decoderSeedValue = value;
     updateDecoder();
 }
 
-function onRandomizeButtonClicked() {
-    let newSeed = Math.random();
-    document.getElementById("seedValueInput").value = newSeed;
-    onSeedValueChanged(newSeed);
+function onSessionValueChanged(value){
+    localStorage.session = value;
+    updateDecoder();
+}
+
+function onRandomSessionButtonClicked() {
+    let newSession = Math.random();
+    document.getElementById("sessionValueInput").value = newSession;    
+    onSessionValueChanged(newSession);
 }
 
 function getUrlVars() {
@@ -121,14 +146,20 @@ function getUrlVars() {
     return vars;
 }
 
-function updateUrl(){    
+function getUrlWithCurrentSettings(){
     var url = new URL(window.location.href);
     var search_params = url.searchParams;
     search_params.set('rowCount', localStorage.rowCount);
     search_params.set('columnCount', localStorage.columnCount);
     search_params.set('assassinCount', localStorage.assassinCount);
-    search_params.set('session', localStorage.seedValue);
+    search_params.set('session', localStorage.session);
+    search_params.set('decoderSeedValue', localStorage.decoderSeedValue);
     url.searchParams = search_params;
+    return url;
+}
+
+function updateUrl(){    
+    let url = getUrlWithCurrentSettings();
     window.history.pushState({path:url.toString()},'',url.toString());
 }
 

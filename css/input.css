@@ -14,7 +14,7 @@ input[type=text], select {
     color: var(--font-color);
   }
   
-  input:hover {    
+  input[type=text]:hover {    
     border-bottom: 1px solid var(--activeControls-color);
   }
 

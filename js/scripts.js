@@ -7,10 +7,12 @@ function updateDecoder() {
     let rowCount = document.getElementById("rowCount").value;
     let seedValue = document.getElementById("seedValueInput").value;
 
-    let grid = createDecoder(columnCount, rowCount, seedValue)
+    let grid = createBoard(columnCount, rowCount);
     let gridContainer = document.getElementById("decoder-grid-container");
     gridContainer.innerHTML = "";
     gridContainer.appendChild(grid);
+
+    createDecoder(columnCount, rowCount, seedValue)
 
     updateUrl();
     return false;

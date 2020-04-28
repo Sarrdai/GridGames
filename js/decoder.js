@@ -1,11 +1,14 @@
 const boxClass = "box"
 const boxName = "decoderTile"
 
-function createDecoder(columnCount, rowCount, seedValue) {
-    
-    let myrng = new Math.seedrandom(seedValue.toUpperCase());
+const boardGameClass = "boardGame"
+const boardgameId = "boardGame"
 
-    let count = columnCount * rowCount;
+const team1PropertyName = "--team1-color";
+const team2PropertyName = "--team2-color";
+const assassinPropertyName = "--assassin-color";
+
+function createBoard(columnCount, rowCount){
 
     let height = document.documentElement.clientHeight;
     let width = document.documentElement.clientWidth;
@@ -15,12 +18,25 @@ function createDecoder(columnCount, rowCount, seedValue) {
 
     let fractionPerColumn = 0.8 * Math.min(maxWidthInFr, maxHeightInFr)
 
-    let grid = updateDecoderGrid(columnCount, fractionPerColumn);
+    let boardGame = updateBoardGrid(columnCount, fractionPerColumn);
 
-    let randomizedIndexes = [];
+    let count = columnCount * rowCount;
     for (let i = 0; i < count; i++) {
         let box = createBox(boxName + i);
-        grid.appendChild(box);
+        boardGame.appendChild(box);   
+    }
+
+    return boardGame;
+}
+
+function createDecoder(columnCount, rowCount, seedValue) {
+    
+    let myrng = new Math.seedrandom(seedValue.toUpperCase());
+    
+    let grid = document.getElementById(boardgameId);
+    let count = columnCount * rowCount;
+    let randomizedIndexes = [];
+    for (let i = 0; i < count; i++) {
         randomizedIndexes.push(i);        
     }
     randomizedIndexes.sort(function (a, b) { return 0.5 - myrng() });
@@ -30,7 +46,7 @@ function createDecoder(columnCount, rowCount, seedValue) {
 
     //load csv from js?
     let computedStyle = getComputedStyle(document.documentElement);
-    colors = [computedStyle.getPropertyValue('--team1-color'), computedStyle.getPropertyValue('--team2-color')]
+    colors = [computedStyle.getPropertyValue(team1PropertyName), computedStyle.getPropertyValue(team2PropertyName)]
     colors.sort(function (a, b) { return 0.5 - myrng() });
 
     //better way to return startingTeam color withouth knowlege of the outer elements
@@ -39,24 +55,25 @@ function createDecoder(columnCount, rowCount, seedValue) {
     startIndex = 0;
     let lastIndexTeamOne = colorizeDecoderTiles(grid, randomizedIndexes, startIndex, teamOneTileCounts, colors[0]);
     let lastIndexTeamTwo = colorizeDecoderTiles(grid, randomizedIndexes, lastIndexTeamOne + 1, teamTwoTileCounts, colors[1]);
-    let lastIndexAssassin = colorizeDecoderTiles(grid, randomizedIndexes, lastIndexTeamTwo + 1, Number(localStorage.assassinCount), computedStyle.getPropertyValue('--assassin-color'));
-
-    function colorizeDecoderTiles(grid, randomizedIndexes, startIndex, indexCount, color) {
-        let lastIndex = startIndex + indexCount;        
-        lastIndex = lastIndex > randomizedIndexes.length ? randomizedIndexes.length : lastIndex;
-        for (let i = startIndex; i < lastIndex; i++) {
-            let selectedBox = grid.childNodes[randomizedIndexes[i]];
-            selectedBox.style.backgroundColor = color;
-        }
-        return lastIndex;
-    }
+    let lastIndexAssassin = colorizeDecoderTiles(grid, randomizedIndexes, lastIndexTeamTwo + 1, Number(localStorage.assassinCount), computedStyle.getPropertyValue(assassinPropertyName));
 
     return grid;
 }
 
-function updateDecoderGrid(columns, fractionPerColumn) {
+function colorizeDecoderTiles(grid, randomizedIndexes, startIndex, indexCount, color) {
+    let lastIndex = startIndex + indexCount;        
+    lastIndex = lastIndex > randomizedIndexes.length ? randomizedIndexes.length : lastIndex;
+    for (let i = startIndex; i < lastIndex; i++) {
+        let selectedBox = grid.childNodes[randomizedIndexes[i]];
+        selectedBox.style.backgroundColor = color;
+    }
+    return lastIndex;
+}
+
+function updateBoardGrid(columns, fractionPerColumn) {
     let grid = document.createElement("div")
-    grid.setAttribute("class","decoderGrid")
+    grid.setAttribute("id", boardgameId)
+    grid.setAttribute("class", boardGameClass)
     grid.style.gridTemplateColumns = `repeat( ${columns}, ${fractionPerColumn * 100}%)`;
     return grid;
 }

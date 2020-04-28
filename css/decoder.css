@@ -5,7 +5,7 @@
     --assassin-color: rgb(35, 37, 37);
   }
 
-  .decoderGrid {
+  .boardGame {
     display: grid;
     justify-content: center;
     align-items: start;

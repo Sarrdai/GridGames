@@ -14,6 +14,10 @@ input[type=text], select {
     color: var(--font-color);
   }
   
+  input:hover {    
+    border-bottom: 1px solid var(--activeControls-color);
+  }
+
   button {
     width: 50%;
     margin: 12px;

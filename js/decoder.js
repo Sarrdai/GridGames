@@ -25,7 +25,7 @@ function createDecoder(columnCount, rowCount, seedValue) {
     }
     randomizedIndexes.sort(function (a, b) { return 0.5 - myrng() });
 
-    let teamOneTileCounts = count * 0.36;
+    let teamOneTileCounts = Math.round(count * 0.36);
     let teamTwoTileCounts = teamOneTileCounts - 1;
 
     //load csv from js?
@@ -43,7 +43,7 @@ function createDecoder(columnCount, rowCount, seedValue) {
 
     function colorizeDecoderTiles(grid, randomizedIndexes, startIndex, indexCount, color) {
         let lastIndex = startIndex + indexCount;        
-        lastIndex = lastIndex > grid.childNodes.length ? grid.childNodes.length : lastIndex;
+        lastIndex = lastIndex > randomizedIndexes.length ? randomizedIndexes.length : lastIndex;
         for (let i = startIndex; i < lastIndex; i++) {
             let selectedBox = grid.childNodes[randomizedIndexes[i]];
             selectedBox.style.backgroundColor = color;

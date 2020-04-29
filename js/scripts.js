@@ -18,6 +18,8 @@ function updateDecoder() {
     if(localStorage.decoderSeedValue != ""){
         let startingTeamColor = applyDecoderSeed(columnCount * rowCount, decoderSeedValue);
         document.getElementById("startingTeam").style.backgroundColor = startingTeamColor; 
+    }else{
+        document.getElementById("startingTeam").style.backgroundColor = null;
     }
     
     updateUrl();

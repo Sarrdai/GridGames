@@ -17,23 +17,28 @@ const tileColors ={
 
 function createBoard(columnCount, rowCount) {
 
+    let boardGame = updateBoardGrid(columnCount, rowCount);
+    addBoardTiles(boardGame, columnCount, rowCount)
+    
+    return boardGame;
+}
+
+function addBoardTiles(boardGame, columnCount, rowCount){
+
     let height = document.documentElement.clientHeight;
     let width = document.documentElement.clientWidth;
 
-    maxWidthInFr = (height / rowCount) / width;
-    maxHeightInFr = (width / columnCount) / height;
+    maxWidthInPx = (height / rowCount);
+    maxHeightInPx = (width / columnCount);
 
-    let fractionPerColumn = 0.8 * Math.min(maxWidthInFr, maxHeightInFr)
-
-    let boardGame = updateBoardGrid(columnCount, fractionPerColumn);
+    let tileSizeInPx = Math.min(maxWidthInPx, maxHeightInPx);
+    tileWidthInPercent = tileSizeInPx / width;
 
     let count = columnCount * rowCount;
     for (let i = 0; i < count; i++) {
-        let box = createBox(boxName + i);
+        let box = createBox(boxName + i, tileWidthInPercent);
         boardGame.appendChild(box);
     }
-
-    return boardGame;
 }
 
 function applyDecoderSeed(tileCount, seedValue) {
@@ -69,7 +74,7 @@ function applySessionId(tileCount, session) {
     let randomizedIndexes = getRandomIndexArray(tileCount, session);
     
     console.log("Applying board game here")
-    //applyTextToTiles(grid, randomizedIndexes, tileCount, textArray)
+    applyTextToTiles(grid, randomizedIndexes, tileCount, textArray)
 
     return;
 }
@@ -107,13 +112,15 @@ function updateBoardGrid(columns, fractionPerColumn) {
     let grid = document.createElement("div")
     grid.setAttribute("id", boardgameId)
     grid.setAttribute("class", boardGameClass)
-    grid.style.gridTemplateColumns = `repeat( ${columns}, ${fractionPerColumn * 100}%)`;
+    grid.style.gridTemplateColumns = `repeat( ${columns}, auto)`;
     return grid;
 }
 
-function createBox(id) {
+function createBox(id, tileSizeInVW) {
     var newBox = document.createElement("div");
     newBox.setAttribute("class", boxClass)
     newBox.setAttribute("id", id)
+    newBox.style.width = tileSizeInVW * 80 + "vw";
+    newBox.style.height = tileSizeInVW * 80 + "vw";
     return newBox;
 }

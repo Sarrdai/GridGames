@@ -17,10 +17,8 @@
 }
 
 .box {
-    background-color: var(--civilian-color);    
-    width: auto;    
-    padding-top: 100%;
-    border-radius: 7px;
+    background-color: var(--civilian-color);      
+    border-radius: 5px;
     text-align: center;
     color: var(--font-color);
   }

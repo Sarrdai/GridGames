@@ -4,9 +4,13 @@ const boxName = "decoderTile"
 const boardGameClass = "boardGame"
 const boardgameId = "boardGame"
 
-const team1PropertyName = "--team1-color";
-const team2PropertyName = "--team2-color";
-const assassinPropertyName = "--assassin-color";
+const tileColors ={
+    team1: "--team1-color",
+    team2: "--team2-color",
+    assassin: "--assassin-color",
+
+}
+
 
 function createBoard(columnCount, rowCount) {
 
@@ -36,19 +40,21 @@ function applyDecoderSeed(tileCount, seedValue) {
     let teamOneTileCounts = Math.round(tileCount * 0.36);
     let teamTwoTileCounts = teamOneTileCounts - 1;
 
-    let myrng = new Math.seedrandom(seedValue.toUpperCase());
     let computedStyle = getComputedStyle(document.documentElement);
+
+   /*  let myrng = new Math.seedrandom(seedValue.toUpperCase());
+    
     colors = [computedStyle.getPropertyValue(team1PropertyName), computedStyle.getPropertyValue(team2PropertyName)]
     colors.sort(function (a, b) { return 0.5 - myrng() });
 
     //better way to return startingTeam color withouth knowlege of the outer elements
-    document.getElementById("startingTeam").style.backgroundColor = colors[0];
+    document.getElementById("startingTeam").style.backgroundColor = colors[0]; */
 
     let grid = document.getElementById(boardgameId);
     startIndex = 0;
-    let lastIndexTeamOne = colorizeDecoderTiles(grid, randomizedIndexes, startIndex, teamOneTileCounts, colors[0]);
-    let lastIndexTeamTwo = colorizeDecoderTiles(grid, randomizedIndexes, lastIndexTeamOne + 1, teamTwoTileCounts, colors[1]);
-    let lastIndexAssassin = colorizeDecoderTiles(grid, randomizedIndexes, lastIndexTeamTwo + 1, Number(localStorage.assassinCount), computedStyle.getPropertyValue(assassinPropertyName));
+    let lastIndexTeamOne = colorizeDecoderTiles(grid, randomizedIndexes, startIndex, teamOneTileCounts, computedStyle.getPropertyValue(tileColors.team1));
+    let lastIndexTeamTwo = colorizeDecoderTiles(grid, randomizedIndexes, lastIndexTeamOne + 1, teamTwoTileCounts, computedStyle.getPropertyValue(tileColors.team2));
+    let lastIndexAssassin = colorizeDecoderTiles(grid, randomizedIndexes, lastIndexTeamTwo + 1, Number(localStorage.assassinCount), computedStyle.getPropertyValue(tileColors.assassin));
 
     return grid;
 }

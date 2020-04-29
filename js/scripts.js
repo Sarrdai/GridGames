@@ -3,24 +3,23 @@ const rowString = "Rows: "
 const assassinString= "Assassins: "
 
 function updateDecoder() {
-    let columnCount = document.getElementById("columnCount").value;
-    let rowCount = document.getElementById("rowCount").value;
-    let decoderSeedValue = document.getElementById("decoderSeedValueInput").value;
-    let session = document.getElementById("sessionValueInput").value;
+    let columnCount = localStorage.columnCount;
+    let rowCount = localStorage.rowCount;
+    let decoderSeedValue = localStorage.decoderSeedValue;
+    let session = localStorage.session;
 
     let grid = createBoard(columnCount, rowCount);
-    let gridContainer = document.getElementById("decoder-grid-container");
-    gridContainer.innerHTML = "";
-    gridContainer.appendChild(grid);
+    replaceGameBoard(grid);
 
-    if(localStorage.decoderSeedValue != ""){
-        applyDecoderSeed(columnCount * rowCount, decoderSeedValue);
-    }
-    
     if(localStorage.session != ""){
         applySessionId(columnCount * rowCount, session);
     }
-
+    
+    if(localStorage.decoderSeedValue != ""){
+        let startingTeamColor = applyDecoderSeed(columnCount * rowCount, decoderSeedValue);
+        document.getElementById("startingTeam").style.backgroundColor = startingTeamColor; 
+    }
+    
     updateUrl();
     return false;
 }
@@ -88,6 +87,12 @@ function initialize() {
     onAssassinCountInputChanged(assassinCountElement.value);
 }
 
+function replaceGameBoard(grid){
+    let gridContainer = document.getElementById("decoder-grid-container");
+    gridContainer.innerHTML = "";
+    gridContainer.appendChild(grid);
+}
+
 function getAssassinSetting() {
     let assassinSetupRadioGroup = document.getElementsByName("assassinSetup")
     var selectedSetting;
@@ -124,7 +129,7 @@ function onAssassinCountInputChanged(value) {
 }
 
 function onDecoderSeedValueChanged(value){
-    localStorage.decoderSeedValue = value;
+    localStorage.decoderSeedValue = value.toUpperCase();
     updateDecoder();
 }
 

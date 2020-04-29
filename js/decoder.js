@@ -4,10 +4,13 @@ const boxName = "decoderTile"
 const boardGameClass = "boardGame"
 const boardgameId = "boardGame"
 
+const computedStyle = getComputedStyle(document.documentElement);
+
 const tileColors ={
-    team1: "--team1-color",
-    team2: "--team2-color",
-    assassin: "--assassin-color",
+    
+    team2:  computedStyle.getPropertyValue("--team2-color"),
+    team1:  computedStyle.getPropertyValue("--team1-color"),
+    assassin:  computedStyle.getPropertyValue("--assassin-color"),
 
 }
 
@@ -40,23 +43,22 @@ function applyDecoderSeed(tileCount, seedValue) {
     let teamOneTileCounts = Math.round(tileCount * 0.36);
     let teamTwoTileCounts = teamOneTileCounts - 1;
 
-    let computedStyle = getComputedStyle(document.documentElement);
-
-   /*  let myrng = new Math.seedrandom(seedValue.toUpperCase());
-    
-    colors = [computedStyle.getPropertyValue(team1PropertyName), computedStyle.getPropertyValue(team2PropertyName)]
-    colors.sort(function (a, b) { return 0.5 - myrng() });
-
-    //better way to return startingTeam color withouth knowlege of the outer elements
-    document.getElementById("startingTeam").style.backgroundColor = colors[0]; */
+    let colors = getTeamOrder(seedValue);
 
     let grid = document.getElementById(boardgameId);
     startIndex = 0;
-    let lastIndexTeamOne = colorizeDecoderTiles(grid, randomizedIndexes, startIndex, teamOneTileCounts, computedStyle.getPropertyValue(tileColors.team1));
-    let lastIndexTeamTwo = colorizeDecoderTiles(grid, randomizedIndexes, lastIndexTeamOne + 1, teamTwoTileCounts, computedStyle.getPropertyValue(tileColors.team2));
-    let lastIndexAssassin = colorizeDecoderTiles(grid, randomizedIndexes, lastIndexTeamTwo + 1, Number(localStorage.assassinCount), computedStyle.getPropertyValue(tileColors.assassin));
+    let lastIndexTeamOne = colorizeDecoderTiles(grid, randomizedIndexes, startIndex, teamOneTileCounts, colors[0]);
+    let lastIndexTeamTwo = colorizeDecoderTiles(grid, randomizedIndexes, lastIndexTeamOne + 1, teamTwoTileCounts, colors[1]);
+    let lastIndexAssassin = colorizeDecoderTiles(grid, randomizedIndexes, lastIndexTeamTwo + 1, Number(localStorage.assassinCount), tileColors.assassin);
 
-    return grid;
+    return colors[0];
+}
+
+function getTeamOrder(session){
+    let myrng = new Math.seedrandom(session);
+    let colors = [tileColors.team1, tileColors.team2]
+    colors.sort(function (a, b) { return 0.5 - myrng() });
+    return colors;
 }
 
 
@@ -69,11 +71,11 @@ function applySessionId(tileCount, session) {
     console.log("Applying board game here")
     //applyTextToTiles(grid, randomizedIndexes, tileCount, textArray)
 
-    return grid;
+    return;
 }
 
 function getRandomIndexArray(count, seedValue){
-    let myrng = new Math.seedrandom(seedValue.toUpperCase());
+    let myrng = new Math.seedrandom(seedValue);
     
     let indexArray = [];
     for (let i = 0; i < count; i++) {

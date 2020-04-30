@@ -28,6 +28,7 @@ function updateDecoder() {
 
 function initialize() {
 
+    loadWordsFromCsv()
     let computedStyle = getComputedStyle(document.documentElement);
     var metaTag = document.createElement('meta');
     metaTag.setAttribute('name', 'theme-color');

@@ -6,11 +6,13 @@ const boardgameId = "boardGame"
 
 const computedStyle = getComputedStyle(document.documentElement);
 
-const tileColors ={
-    
-    team2:  computedStyle.getPropertyValue("--team2-color"),
-    team1:  computedStyle.getPropertyValue("--team1-color"),
-    assassin:  computedStyle.getPropertyValue("--assassin-color"),
+var wordList;
+
+const tileColors = {
+
+    team2: computedStyle.getPropertyValue("--team2-color"),
+    team1: computedStyle.getPropertyValue("--team1-color"),
+    assassin: computedStyle.getPropertyValue("--assassin-color"),
 
 }
 
@@ -19,11 +21,11 @@ function createBoard(columnCount, rowCount) {
 
     let boardGame = updateBoardGrid(columnCount, rowCount);
     addBoardTiles(boardGame, columnCount, rowCount)
-    
+
     return boardGame;
 }
 
-function addBoardTiles(boardGame, columnCount, rowCount){
+function addBoardTiles(boardGame, columnCount, rowCount) {
 
     let height = document.documentElement.clientHeight;
     let width = document.documentElement.clientWidth;
@@ -59,7 +61,7 @@ function applyDecoderSeed(tileCount, seedValue) {
     return colors[0];
 }
 
-function getTeamOrder(session){
+function getTeamOrder(session) {
     let myrng = new Math.seedrandom(session);
     let colors = [tileColors.team1, tileColors.team2]
     colors.sort(function (a, b) { return 0.5 - myrng() });
@@ -68,20 +70,24 @@ function getTeamOrder(session){
 
 
 function applySessionId(tileCount, session) {
-    
+
     let textArray = []
     let grid = document.getElementById(boardgameId);
     let randomizedIndexes = getRandomIndexArray(tileCount, session);
     
-    console.log("Applying board game here")
-    //applyTextToTiles(grid, randomizedIndexes, tileCount, textArray)
+    if(!wordList){
+        return
+    }else{
+        console.log("Applying words here")
+        //applyTextToTiles(grid, randomizedIndexes, tileCount, wordList)        
+    }
 
     return;
 }
 
-function getRandomIndexArray(count, seedValue){
+function getRandomIndexArray(count, seedValue) {
     let myrng = new Math.seedrandom(seedValue);
-    
+
     let indexArray = [];
     for (let i = 0; i < count; i++) {
         indexArray.push(i);
@@ -101,10 +107,11 @@ function colorizeDecoderTiles(grid, randomizedIndexes, startIndex, indexCount, c
     return lastIndex;
 }
 
-function applyTextToTiles(grid, randomizedIndexes, tileCount, textArray){
-    for(let i= 0; i < tileCount; i++){
+function applyTextToTiles(grid, randomizedIndexes, tileCount, textArray) {
+    for (let i = 0; i < tileCount; i++) {
         let selectedBox = grid.childNodes[i];
-        selectedBox.textContent = randomizedIndexes[i];
+        index = randomizedIndexes[i] % textArray.length;
+        selectedBox.textContent = textArray[index];
     }
 }
 
@@ -123,4 +130,25 @@ function createBox(id, tileSizeInVW) {
     newBox.style.width = tileSizeInVW * 80 + "vw";
     newBox.style.height = tileSizeInVW * 80 + "vw";
     return newBox;
+}
+
+function loadWordsFromCsv() {    
+    var objXMLHttpRequest = new XMLHttpRequest();
+    objXMLHttpRequest.onreadystatechange = function () {
+        if (objXMLHttpRequest.readyState === 4) {
+            if (objXMLHttpRequest.status === 200) {                
+                wordList = csvToArray(objXMLHttpRequest.responseText);
+            } else {
+                console.debug('Error Code: ' + objXMLHttpRequest.status);
+                console.debug('Error Message: ' + objXMLHttpRequest.statusText);
+            }
+        }
+    }
+    objXMLHttpRequest.open('GET', '/csv/de-DE.csv');
+    objXMLHttpRequest.send();
+}
+
+function csvToArray(csv){
+    let arrayOfLines = csv.split(/\r\n|\n/);
+    return arrayOfLines;
 }

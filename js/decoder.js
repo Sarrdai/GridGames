@@ -74,7 +74,7 @@ function applySessionId(tileCount, session) {
     let randomizedIndexes = getRandomIndexArray(tileCount, session);
     
     console.log("Applying board game here")
-    applyTextToTiles(grid, randomizedIndexes, tileCount, textArray)
+    //applyTextToTiles(grid, randomizedIndexes, tileCount, textArray)
 
     return;
 }

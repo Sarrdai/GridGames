@@ -16,24 +16,26 @@
     <script type="text/javascript" src="js/scripts.js"></script>
 </head>
 
-<body onload="initialize()">
+<body onload="initialize()">  
 
-    <!--session area-->
-    <h1>Game Session</h1>
-    <div class="sliderContainer">
-        <input type="text" id="sessionValueInput" name="sessionValueInput" oninput="onSessionValueChanged(this.value)"
-            onchange="onSessionValueChanged(this.value)">
-        <br>
-        <button id="randomSessionButton" onclick="onRandomSessionButtonClicked()">Random Session</button>
+    <!-- decoder tiles -->
+    <h1>Decoder</h1>
+    <div class="grid-container" id="decoder-grid-container">
     </div>
-
-    <h1>Decoder Key</h1>
+    <br>
+    <!--decoder key-->
+    <!--<h1>Geheimer Schlüssel:</h1>-->
     <div class="sliderContainer">
-        <input type="text" id="decoderSeedValueInput" name="decoderSeedValueInput"
+        <input type="text" id="decoderSeedValueInput" name="decoderSeedValueInput" placeholder="Geheimer Schlüssel"
             oninput="onDecoderSeedValueChanged(this.value)" onchange="onDecoderSeedValueChanged(this.value)">
-    </div>
+    </div>    
+
+     <!-- Show starting team -->
+     <h2>Start</h2>
+     <div class="box centered" id="startingTeam"></div>
+
     <!-- config area-->
-    <h1>Board Size</h1>
+    <h1>Einstellungen</h1>
     <div class="sliderContainer">
         <label for="rowCount" id="rowCountText"></label><br>
         <input type="range" min="3" max="25" value="5" class="slider" id="rowCount"
@@ -52,16 +54,14 @@
             oninput="onAssassinCountInputChanged(this.value)" onchange="onAssassinCountInputChanged(this.value)">
     </div>
 
-    <!-- Show starting team -->
-    <h1>Starting Team</h1>
-    <div class="box centered" id="startingTeam"></div>
-
-    <!-- decoder tiles -->
-    <h1>Decoder</h1>
-    <div class="grid-container" id="decoder-grid-container">
-
-    </div>
-
+      <!--session area-->
+      <h2>Game Session (coming soon)</h2>
+      <div class="sliderContainer">
+          <input type="text" id="sessionValueInput" name="sessionValueInput" oninput="onSessionValueChanged(this.value)"
+              onchange="onSessionValueChanged(this.value)">
+          <br>
+          <button id="randomSessionButton" onclick="onRandomSessionButtonClicked()">Zufällige Session</button>
+      </div>
 </body>
 
 </html>

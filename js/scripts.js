@@ -1,6 +1,6 @@
-const columnString = "Colums: "
-const rowString = "Rows: "
-const assassinString= "Assassins: "
+const columnString = "Spalten: "
+const rowString = "Zeilen: "
+const assassinString= "Assassine: "
 
 function updateDecoder() {
     let columnCount = localStorage.columnCount;

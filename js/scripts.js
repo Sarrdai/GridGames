@@ -2,21 +2,24 @@ const columnString = "Spalten: "
 const rowString = "Zeilen: "
 const assassinString= "Assassine: "
 
+var decoder;
+
 function updateDecoder() {
+    
     let columnCount = localStorage.columnCount;
     let rowCount = localStorage.rowCount;
     let decoderSeedValue = localStorage.decoderSeedValue;
     let session = localStorage.session;
 
-    let grid = createBoard(columnCount, rowCount);
-    replaceGameBoard(grid);
+    let grid = decoder.createBoard(columnCount, rowCount);
+    replaceGameBoard(grid); 
 
     if(localStorage.session != ""){
-        applySessionId(columnCount * rowCount, session);
+        decoder.applySessionId(columnCount * rowCount, session);
     }
     
     if(localStorage.decoderSeedValue != ""){
-        let startingTeamColor = applyDecoderSeed(columnCount * rowCount, decoderSeedValue);
+        let startingTeamColor = decoder.applyDecoderSeed(columnCount * rowCount, decoderSeedValue);
         document.getElementById("startingTeam").style.backgroundColor = startingTeamColor; 
     }else{
         document.getElementById("startingTeam").style.backgroundColor = null;
@@ -28,7 +31,9 @@ function updateDecoder() {
 
 function initialize() {
 
-    loadWordsFromCsv()
+    decoder = new Decoder();
+    decoder.loadWordsFromCsv()
+    
     let computedStyle = getComputedStyle(document.documentElement);
     var metaTag = document.createElement('meta');
     metaTag.setAttribute('name', 'theme-color');

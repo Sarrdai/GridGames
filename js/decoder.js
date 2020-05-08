@@ -1,4 +1,4 @@
-class Decoder {
+class GridBoard {
 
     static Ids =
         {
@@ -13,7 +13,11 @@ class Decoder {
 
     constructor() {
         this.WordList;
-        this.BoxName = "decoderTile"
+        this.BoxName = "tile";
+        
+        this._columns;
+        this._rows;
+        this._board;
 
         this.computedStyle = getComputedStyle(document.documentElement);
         this.TileColors = {
@@ -22,36 +26,51 @@ class Decoder {
             Team1: this.computedStyle.getPropertyValue("--team1-color"),
             Assassin: this.computedStyle.getPropertyValue("--assassin-color"),
         
+        };        
+    }
+
+    get Rows()
+        {
+            return this._rows;
         }
+
+    get Columns()
+        {
+            return this._columns;
+        }
+
+    get Board(){
+        return this._board;
     }
 
     createBoard(columnCount, rowCount) {
 
-        let boardGame = this.updateBoardGrid(columnCount, rowCount);
-        this.addBoardTiles(boardGame, columnCount, rowCount)
-    
-        return boardGame;
+        this._columns = columnCount;
+        this._rows = rowCount;
+
+        this._board = this.updateBoardGrid();
+        this.addBoardTiles()
     }
     
-    addBoardTiles(boardGame, columnCount, rowCount) {
+    addBoardTiles() {
     
         let height = document.documentElement.clientHeight;
         let width = document.documentElement.clientWidth;
     
-        let maxWidthInPx = (height / rowCount);
-        let maxHeightInPx = (width / columnCount);
+        let maxWidthInPx = (height / this.Rows);
+        let maxHeightInPx = (width / this.Columns);
     
         let tileSizeInPx = Math.min(maxWidthInPx, maxHeightInPx);
         let tileWidthInPercent = tileSizeInPx / width;
     
-        let count = columnCount * rowCount;
+        let count = this.Columns * this.Rows;
         for (let i = 0; i < count; i++) {
             let box = this.createBox(this.BoxName + i, tileWidthInPercent);
-            boardGame.appendChild(box);
+            this.Board.appendChild(box);
         }
     }
     
-    applyDecoderSeed(tileCount, seedValue) {
+    applyGridBoardSeed(tileCount, seedValue) {
     
         let randomizedIndexes = this.getRandomIndexArray(tileCount, seedValue);
     
@@ -60,11 +79,11 @@ class Decoder {
     
         let colors = this.getTeamOrder(seedValue);
     
-        let grid = document.getElementById(Decoder.Ids.BoardGame);
+        let grid = document.getElementById(GridBoard.Ids.BoardGame);
         let startIndex = 0;
-        let lastIndexTeamOne = this.colorizeDecoderTiles(grid, randomizedIndexes, startIndex, teamOneTileCounts, colors[0]);
-        let lastIndexTeamTwo = this.colorizeDecoderTiles(grid, randomizedIndexes, lastIndexTeamOne + 1, teamTwoTileCounts, colors[1]);
-        let lastIndexAssassin = this.colorizeDecoderTiles(grid, randomizedIndexes, lastIndexTeamTwo + 1, Number(localStorage.assassinCount), this.TileColors.Assassin);
+        let lastIndexTeamOne = this.colorizeGridBoardTiles(grid, randomizedIndexes, startIndex, teamOneTileCounts, colors[0]);
+        let lastIndexTeamTwo = this.colorizeGridBoardTiles(grid, randomizedIndexes, lastIndexTeamOne + 1, teamTwoTileCounts, colors[1]);
+        let lastIndexAssassin = this.colorizeGridBoardTiles(grid, randomizedIndexes, lastIndexTeamTwo + 1, Number(localStorage.assassinCount), this.TileColors.Assassin);
     
         return colors[0];
     }
@@ -80,14 +99,14 @@ class Decoder {
     applySessionId(tileCount, session) {
     
         let textArray = []
-        let grid = document.getElementById(Decoder.Ids.BoardGame);
+        let grid = document.getElementById(GridBoard.Ids.BoardGame);
         let randomizedIndexes = this.getRandomIndexArray(tileCount, session);
         
         if(!this.WordList){
             return
         }else{
             console.log("Applying words here")
-            //applyTextToTiles(grid, randomizedIndexes, tileCount, wordList)        
+            applyTextToTiles(grid, randomizedIndexes, tileCount, wordList)        
         }
     
         return;
@@ -105,7 +124,7 @@ class Decoder {
         return indexArray;
     }
     
-    colorizeDecoderTiles(grid, randomizedIndexes, startIndex, indexCount, color) {
+    colorizeGridBoardTiles(grid, randomizedIndexes, startIndex, indexCount, color) {
         let lastIndex = startIndex + indexCount;
         lastIndex = lastIndex > randomizedIndexes.length ? randomizedIndexes.length : lastIndex;
         for (let i = startIndex; i < lastIndex; i++) {
@@ -123,17 +142,17 @@ class Decoder {
         }
     }
     
-    updateBoardGrid(columns, fractionPerColumn) {
+    updateBoardGrid() {
         let grid = document.createElement("div")
-        grid.setAttribute("id", Decoder.Ids.BoardGame)
-        grid.setAttribute("class", Decoder.Class.BoardGame)
-        grid.style.gridTemplateColumns = `repeat( ${columns}, auto)`;
+        grid.setAttribute("id", GridBoard.Ids.BoardGame)
+        grid.setAttribute("class", GridBoard.Class.BoardGame)
+        grid.style.gridTemplateColumns = `repeat( ${this.Columns}, auto)`;
         return grid;
     }
     
     createBox(id, tileSizeInVW) {
         var newBox = document.createElement("div");
-        newBox.setAttribute("class", Decoder.Class.Box)
+        newBox.setAttribute("class", GridBoard.Class.Box)
         newBox.setAttribute("id", id)
         newBox.style.width = tileSizeInVW * 80 + "vw";
         newBox.style.height = tileSizeInVW * 80 + "vw";
@@ -145,7 +164,7 @@ class Decoder {
         objXMLHttpRequest.onreadystatechange = function () {
             if (objXMLHttpRequest.readyState === 4) {
                 if (objXMLHttpRequest.status === 200) {                
-                    this.WordList = Decoder.csvToArray(objXMLHttpRequest.responseText);
+                    this.WordList = GridBoard.csvToArray(objXMLHttpRequest.responseText);
                 } else {
                     console.debug('Error Code: ' + objXMLHttpRequest.status);
                     console.debug('Error Message: ' + objXMLHttpRequest.statusText);

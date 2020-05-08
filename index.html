@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Decoder Generator</title>
+    <title>GridBoard Generator</title>
 
     <!--css-->
     <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -19,7 +19,7 @@
 <body onload="initialize()">  
 
     <!-- decoder tiles -->
-    <h1>Decoder</h1>
+    <h1>GridBoard</h1>
     <div class="grid-container" id="decoder-grid-container">
     </div>
     <br>
@@ -27,7 +27,7 @@
     <!--<h1>Geheimer Schlüssel:</h1>-->
     <div class="sliderContainer">
         <input type="text" id="decoderSeedValueInput" name="decoderSeedValueInput" placeholder="Geheimer Schlüssel"
-            oninput="onDecoderSeedValueChanged(this.value)" onchange="onDecoderSeedValueChanged(this.value)">
+            oninput="onGridBoardSeedValueChanged(this.value)" onchange="onGridBoardSeedValueChanged(this.value)">
     </div>    
 
      <!-- Show starting team -->

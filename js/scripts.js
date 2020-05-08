@@ -4,14 +4,17 @@ const assassinString= "Assassine: "
 
 var decoder;
 
-function updateDecoder() {
+function updateGridBoard() {
     
     let columnCount = localStorage.columnCount;
     let rowCount = localStorage.rowCount;
     let decoderSeedValue = localStorage.decoderSeedValue;
     let session = localStorage.session;
 
-    let grid = decoder.createBoard(columnCount, rowCount);
+    decoder.createBoard(columnCount, rowCount);
+
+    let grid = decoder.Board;
+
     replaceGameBoard(grid); 
 
     if(localStorage.session != ""){
@@ -19,7 +22,7 @@ function updateDecoder() {
     }
     
     if(localStorage.decoderSeedValue != ""){
-        let startingTeamColor = decoder.applyDecoderSeed(columnCount * rowCount, decoderSeedValue);
+        let startingTeamColor = decoder.applyGridBoardSeed(columnCount * rowCount, decoderSeedValue);
         document.getElementById("startingTeam").style.backgroundColor = startingTeamColor; 
     }else{
         document.getElementById("startingTeam").style.backgroundColor = null;
@@ -31,9 +34,9 @@ function updateDecoder() {
 
 function initialize() {
 
-    decoder = new Decoder();
+    decoder = new GridBoard();
     decoder.loadWordsFromCsv()
-    
+
     let computedStyle = getComputedStyle(document.documentElement);
     var metaTag = document.createElement('meta');
     metaTag.setAttribute('name', 'theme-color');
@@ -86,7 +89,7 @@ function initialize() {
     if (localStorage.decoderSeedValue) {
         decoderSeedValueElement.value = localStorage.decoderSeedValue;
     }
-    onDecoderSeedValueChanged(decoderSeedValueElement.value);
+    onGridBoardSeedValueChanged(decoderSeedValueElement.value);
 
     let assassinCountElement = document.getElementById("assassinCount");
     if (localStorage.assassinCount) {
@@ -119,31 +122,31 @@ function onRowCountInputChanged(value) {
     localStorage.rowCount = Number(value);
     let rowCountText = document.getElementById("rowCountText");
     rowCountText.innerText = rowString + value
-    updateDecoder();
+    updateGridBoard();
 }
 
 function onColumnCountInputChanged(value) {
     localStorage.columnCount = Number(value);
     let columnCountText = document.getElementById("columnCountText");
     columnCountText.innerText = columnString + value
-    updateDecoder();
+    updateGridBoard();
 }
 
 function onAssassinCountInputChanged(value) {
     localStorage.assassinCount = Number(value);
     let assassinCountText = document.getElementById("assassinCountText");
     assassinCountText.innerText = assassinString + value
-    updateDecoder();
+    updateGridBoard();
 }
 
-function onDecoderSeedValueChanged(value){
+function onGridBoardSeedValueChanged(value){
     localStorage.decoderSeedValue = value.toUpperCase();
-    updateDecoder();
+    updateGridBoard();
 }
 
 function onSessionValueChanged(value){
     localStorage.session = value;
-    updateDecoder();
+    updateGridBoard();
 }
 
 function onRandomSessionButtonClicked() {

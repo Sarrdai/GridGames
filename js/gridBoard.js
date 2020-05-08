@@ -14,7 +14,6 @@ class GridBoard {
         }            
 
     constructor(columnCount, rowCount) {
-        this.WordList;
         this.TileName = "tile";
         
         this._columns;
@@ -59,8 +58,7 @@ class GridBoard {
     get Tiles() {
         return this.Board.childNodes;
     }
-  
-    
+   
     addBoardTiles() {
     
         let height = document.documentElement.clientHeight;
@@ -108,37 +106,22 @@ class GridBoard {
         indexArray.sort(function (a, b) { return 0.5 - myrng() });
         return indexArray;
     }
-            
-    //csv
-    loadWordsFromCsv() {    
-        var objXMLHttpRequest = new XMLHttpRequest();
-        objXMLHttpRequest.onreadystatechange = function () {
-            if (objXMLHttpRequest.readyState === 4) {
-                if (objXMLHttpRequest.status === 200) {                
-                    this.WordList = GridBoard.csvToArray(objXMLHttpRequest.responseText);
-                } else {
-                    console.debug('Error Code: ' + objXMLHttpRequest.status);
-                    console.debug('Error Message: ' + objXMLHttpRequest.statusText);
-                }
-            }
-        }
-        objXMLHttpRequest.open('GET', '/csv/de-DE.csv');
-        objXMLHttpRequest.send();
-    }
-    
-    //csv
-    static csvToArray(csv){
-        let arrayOfLines = csv.split(/\r\n|\n/);
-        return arrayOfLines;
-    }
-
-
+                
 }
 
 class Decoder extends GridBoard{
     constructor(columSize, rowSize){
         super(columSize, rowSize);
+        this.wordList;
+    }
 
+    get WordList(){
+        return this.wordList;
+    }
+  
+    set WordList(value)
+    {
+        this.wordList = value;
     }
 
     //decoder
@@ -178,12 +161,11 @@ class Decoder extends GridBoard{
         }else{
             console.log("Applying words here")
             let randomizedIndexes = this.getRandomIndexArray(0, this.WordList.length -1, session);
-            applyTextToTiles(randomizedIndexes, this.WordList)        
+            this.applyTextToTiles(randomizedIndexes, this.WordList)        
         }
     
         return;
-    }
-        
+    }        
     
     //decoder
     colorizeGridBoardTiles(randomizedIndexes, startIndex, indexCount, color) {
@@ -200,9 +182,46 @@ class Decoder extends GridBoard{
     applyTextToTiles(randomizedIndexes, textArray) {
         for (let i = 0; i < this.TileCount; i++) {
             let selectedTile = this.Tiles[i];
-            index = randomizedIndexes[i];
+            let index = randomizedIndexes[i];
             selectedTile.textContent = textArray[index];
         }
+    }
+}
+
+class TileContentProvider{
+    constructor(){
+        this.csvArray;        
+    }
+    
+    get CsvContent(){
+        return this.csvArray;
+    }
+
+    set CsvContent(value){
+        this.csvArray = value;
+    }
+
+    //csv
+    LoadFromCsv(simpleCsvReader, path) {     
+        let objXMLHttpRequest = new XMLHttpRequest();       
+        objXMLHttpRequest.onreadystatechange = function () {
+            if (objXMLHttpRequest.readyState === 4) {
+                if (objXMLHttpRequest.status === 200) {                
+                    simpleCsvReader.CsvContent = TileContentProvider.csvToArray(objXMLHttpRequest.responseText);
+                } else {
+                    console.debug('Error Code: ' + objXMLHttpRequest.status);
+                    console.debug('Error Message: ' + objXMLHttpRequest.statusText);
+                }
+            }
+        };
+        objXMLHttpRequest.open('GET', path);
+        objXMLHttpRequest.send();
+    }
+    
+    //csv
+    static csvToArray(csv){
+        let arrayOfLines = csv.split(/\r\n|\n/);
+        return arrayOfLines;
     }
 }
 

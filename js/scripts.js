@@ -11,18 +11,19 @@ function updateGridBoard() {
     let decoderSeedValue = localStorage.decoderSeedValue;
     let session = localStorage.session;
 
-    decoder.createBoard(columnCount, rowCount);
-
+    decoder = new Decoder(columnCount, rowCount);
+    decoder.loadWordsFromCsv();
+    
     let grid = decoder.Board;
 
     replaceGameBoard(grid); 
 
     if(localStorage.session != ""){
-        decoder.applySessionId(columnCount * rowCount, session);
+        decoder.applySessionId(session);
     }
     
     if(localStorage.decoderSeedValue != ""){
-        let startingTeamColor = decoder.applyGridBoardSeed(columnCount * rowCount, decoderSeedValue);
+        let startingTeamColor = decoder.applyGridBoardSeed(decoderSeedValue);
         document.getElementById("startingTeam").style.backgroundColor = startingTeamColor; 
     }else{
         document.getElementById("startingTeam").style.backgroundColor = null;
@@ -33,10 +34,7 @@ function updateGridBoard() {
 }
 
 function initialize() {
-
-    decoder = new GridBoard();
-    decoder.loadWordsFromCsv()
-
+    
     let computedStyle = getComputedStyle(document.documentElement);
     var metaTag = document.createElement('meta');
     metaTag.setAttribute('name', 'theme-color');

@@ -16,7 +16,7 @@
     
 }
 
-.box {
+.tile {
     background-color: var(--civilian-color);      
     border-radius: 5px;
     text-align: center;

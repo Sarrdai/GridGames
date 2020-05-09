@@ -116,7 +116,7 @@ function onAssassinCountInputChanged(value) {
 }
 
 function onGridBoardSeedValueChanged(value){
-    localStorage.decoderSeedValue = value.toUpperCase();    
+    localStorage.decoderSeedValue = value;    
     setInputValueById("decoderSeedValueInput", value);
     decoder.DecoderSeed = value;
     document.getElementById("startingTeam").style.backgroundColor = decoder.StartingTeamColor;   
@@ -131,7 +131,7 @@ function onSessionValueChanged(value){
 }
 
 function onRandomSessionButtonClicked() {
-    let newSession = Math.random();
+    let newSession = Math.random().toString();
     document.getElementById("sessionValueInput").value = newSession;    
     onSessionValueChanged(newSession);
 }

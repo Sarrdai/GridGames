@@ -159,8 +159,8 @@ class Decoder extends GridBoard{
     }
 
     set DecoderSeed(value){
-        this._decoderSeed = value;
-        this.applyGridBoardSeed(value);
+        this._decoderSeed = value.toUpperCase();
+        this.applyGridBoardSeed(this._decoderSeed);
     }
 
     get Session(){
@@ -168,8 +168,8 @@ class Decoder extends GridBoard{
     }
 
     set Session(value){
-        this._session = value;
-        this.applySessionId(value);
+        this._session = value.toUpperCase();
+        this.applySessionId(this._session);
     }
 
     get AssassinCount(){

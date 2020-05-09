@@ -23,7 +23,7 @@ function initialize() {
     }
 
     csvContainer = new CsvContainer();
-    ContentProvider.LoadFromCsv('/csv/de-DE.csv', csvContainer, onFinished);
+    ContentProvider.LoadFromCsv('./csv/de-DE.csv', csvContainer, onFinished);
 
     let computedStyle = getComputedStyle(document.documentElement);
     var metaTag = document.createElement('meta');

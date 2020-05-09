@@ -201,20 +201,15 @@ class Decoder extends GridBoard{
             this.applySessionId(this.Session);
         }
 
-        if(this.DecoderSeed != undefined && this.DecoderSeed != ""){
-            this.applyGridBoardSeed(this.DecoderSeed);
-        }
+       
+        this.applyGridBoardSeed(this.DecoderSeed);
+        
     }
 
     //decoder
     applyGridBoardSeed(seedValue) {
         
-        let allIndexes = [];
-        for(let i = 0; i < this.TileCount; i++){
-            allIndexes.push(i);
-        }
-        this._startingTeamColor = this.colorizeGridBoardTiles(allIndexes, 0, this.TileCount, null);
-        this.enableTileClick();
+        this.clearBoardColors();
 
         if(seedValue != "" && seedValue != undefined){
             this.disableTileClick();
@@ -233,14 +228,20 @@ class Decoder extends GridBoard{
         
             this._startingTeamColor = colors[0];
         
-    }
+    }else{
+        this.enableTileClick();
+    }    
+}
 
-    
+clearBoardColors(){
+    let allIndexes = [];
+    for(let i = 0; i < this.TileCount; i++){
+        allIndexes.push(i);
+    }
+    this._startingTeamColor = this.colorizeGridBoardTiles(allIndexes, 0, this.TileCount, null);    
 }
 
 onTileClick(event){
-    if(this.DecoderSeed == "" || this.DecoderSeed == undefined)
-    {
         let selectedElement;
         if(event.target.className = GridBoard.Class.TileText){        
             selectedElement = event.target.parentNode;
@@ -248,8 +249,7 @@ onTileClick(event){
             selectedElement = event.target;
         }    
         let nextColor = Decoder.getNextColor(selectedElement.style.backgroundColor);
-        selectedElement.style.backgroundColor = nextColor;}
-    
+        selectedElement.style.backgroundColor = nextColor;
 }
 
 enableTileClick()
@@ -291,7 +291,11 @@ static getNextColor(currentColor){
     
     //decoder
     applySessionId(session) {
-    
+        
+        if(this.DecoderSeed == "" || this.DecoderSeed == undefined){
+        this.clearBoardColors();
+        }
+
         if(!this.WordList){
             console.log("applySessionId was called but there is no WordList available.")
             return

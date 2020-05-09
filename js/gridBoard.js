@@ -135,23 +135,22 @@ class Decoder extends GridBoard{
             Columns: 5,
             Assassins: 1,
         }      
-    
+
+        static TileColors = {
+
+            Team2: getComputedStyle(document.documentElement).getPropertyValue("--team2-color").trim(),
+            Team1: getComputedStyle(document.documentElement).getPropertyValue("--team1-color").trim(),
+            Assassin: getComputedStyle(document.documentElement).getPropertyValue("--assassin-color").trim(),
+        
+        };
+        
     constructor(){
         super(Decoder.DefaultValues.Columns, Decoder.DefaultValues.Rows);
         this.wordList;
         this._assassinCount;
         this._session;
         this._decoderSeed;
-        this._startingTeamColor;
-
-        this.computedStyle = getComputedStyle(document.documentElement);
-        this.TileColors = {
-
-            Team2: this.computedStyle.getPropertyValue("--team2-color"),
-            Team1: this.computedStyle.getPropertyValue("--team1-color"),
-            Assassin: this.computedStyle.getPropertyValue("--assassin-color"),
-        
-        };      
+        this._startingTeamColor;        
     }
 
     get DecoderSeed(){
@@ -198,11 +197,11 @@ class Decoder extends GridBoard{
     updateBoardGrid(){
         super.updateBoardGrid();
 
-        if(this.Session != undefined){
+        if(this.Session != undefined && this.Session != ""){
             this.applySessionId(this.Session);
         }
 
-        if(this.DecoderSeed != undefined){
+        if(this.DecoderSeed != undefined && this.DecoderSeed != ""){
             this.applyGridBoardSeed(this.DecoderSeed);
         }
     }
@@ -215,8 +214,11 @@ class Decoder extends GridBoard{
             allIndexes.push(i);
         }
         this._startingTeamColor = this.colorizeGridBoardTiles(allIndexes, 0, this.TileCount, null);
+        this.enableTileClick();
 
-        if(seedValue != ""){
+        if(seedValue != "" && seedValue != undefined){
+            this.disableTileClick();
+            
             let randomizedIndexes = this.getRandomIndexArray(0, this.TileCount-1, seedValue);
     
             let teamOneTileCounts = Math.round(this.TileCount * 0.36);
@@ -227,17 +229,62 @@ class Decoder extends GridBoard{
             let startIndex = 0;
             let lastIndexTeamOne = this.colorizeGridBoardTiles(randomizedIndexes, startIndex, teamOneTileCounts, colors[0]);
             let lastIndexTeamTwo = this.colorizeGridBoardTiles(randomizedIndexes, lastIndexTeamOne, teamTwoTileCounts, colors[1]);
-            let lastIndexAssassin = this.colorizeGridBoardTiles(randomizedIndexes, lastIndexTeamTwo, Number(localStorage.assassinCount), this.TileColors.Assassin);
+            let lastIndexAssassin = this.colorizeGridBoardTiles(randomizedIndexes, lastIndexTeamTwo, Number(localStorage.assassinCount), Decoder.TileColors.Assassin);
         
             this._startingTeamColor = colors[0];
         
     }
+
+    
+}
+
+onTileClick(event){
+    if(this.DecoderSeed == "" || this.DecoderSeed == undefined)
+    {
+        let selectedElement;
+        if(event.target.className = GridBoard.Class.TileText){        
+            selectedElement = event.target.parentNode;
+        }else{
+            selectedElement = event.target;
+        }    
+        let nextColor = Decoder.getNextColor(selectedElement.style.backgroundColor);
+        selectedElement.style.backgroundColor = nextColor;}
+    
+}
+
+enableTileClick()
+{
+    this.Board.childNodes.forEach(tile => {
+        tile.onclick = this.onTileClick;
+        tile.style.cursor = "pointer";
+    });
+}
+
+disableTileClick(){
+    this.Board.childNodes.forEach(tile => {
+        tile.onclick = null;
+        tile.style.cursor = null;
+    });
+}
+
+
+static getNextColor(currentColor){
+    switch(currentColor) {
+        case Decoder.TileColors.Team1:
+          return Decoder.TileColors.Team2;
+        case Decoder.TileColors.Team2:
+            return Decoder.TileColors.Assassin;
+        case Decoder.TileColors.Assassin:
+            return null;
+        default:
+            return Decoder.TileColors.Team1;
+      }
 }
     
     //decoder
     getTeamOrder(seedValue) {
         let myrng = new Math.seedrandom(seedValue);
-        let colors = [this.TileColors.Team1, this.TileColors.Team2]
+        let colors = [Decoder.TileColors.Team1, Decoder.TileColors.Team2]
         colors.sort(function (a, b) { return 0.5 - myrng() });
         return colors;
     }

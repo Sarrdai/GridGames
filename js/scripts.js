@@ -108,7 +108,7 @@ function onAssassinCountInputChanged(value) {
     let assassinCountText = document.getElementById("assassinCountText");
     assassinCountText.innerText = assassinString + value
     setInputValueById("assassinCount", value);
-    decoder.assassinCount = value;
+    decoder.AssassinCount = value;
     updateUrl();
 }
 

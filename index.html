@@ -23,7 +23,7 @@
      <!--session area-->
      <h2>Game Session</h2>
      <div class="sliderContainer">
-         <input type="text" id="sessionValueInput" name="sessionValueInput" placeholder="Session" oninput="onSessionValueChanged(this.value)"
+         <input type="text" id="sessionValueInput" name="sessionValueInput" placeholder="Name der Session eingeben" oninput="onSessionValueChanged(this.value)"
              onchange="onSessionValueChanged(this.value)">
          <br>
          <button id="randomSessionButton" onclick="onRandomSessionButtonClicked()">Zufällige Session</button>
@@ -35,13 +35,13 @@
     <!--decoder key-->
     <!--<h1>Geheimer Schlüssel:</h1>-->
     <div class="sliderContainer">
-        <input type="text" id="decoderSeedValueInput" name="decoderSeedValueInput" placeholder="Geheimer Schlüssel"
+        <input type="text" id="decoderSeedValueInput" name="decoderSeedValueInput" placeholder="geheimen Schlüssel eingeben"
             oninput="onGridBoardSeedValueChanged(this.value)" onchange="onGridBoardSeedValueChanged(this.value)">
     </div>    
 
      <!-- Show starting team -->
      <h2>Start</h2>
-     <div class="box centered" id="startingTeam"></div>
+     <div class="tile centered" id="startingTeam"></div>
 
     <!-- config area-->
     <h1>Einstellungen</h1>

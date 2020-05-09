@@ -181,7 +181,7 @@ class Decoder extends GridBoard{
     }
 
     get StartingTeamColor(){
-        return this._startintTeamColor;
+        return this._startingTeamColor;
     }
 
     get WordList(){

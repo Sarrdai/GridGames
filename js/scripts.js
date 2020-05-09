@@ -2,7 +2,8 @@ const columnString = "Spalten: "
 const rowString = "Zeilen: "
 const assassinString= "Assassine: "
 
-var csvReader;
+var contentProvider;
+var csvContainer;
 
 function updateGridBoard() {
     
@@ -12,7 +13,10 @@ function updateGridBoard() {
     let session = localStorage.session;
 
     decoder = new Decoder(columnCount, rowCount);
-    decoder.WordList = csvReader.CsvContent;
+    if(csvContainer.Status == CsvContainer.States.Loaded){
+        decoder.WordList = csvContainer.Content;
+    }
+    
     
     let grid = decoder.Board;
 
@@ -35,8 +39,8 @@ function updateGridBoard() {
 
 function initialize() {
     
-    csvReader = new TileContentProvider();
-    csvReader.LoadFromCsv(csvReader, '/csv/de-DE.csv');
+    csvContainer = new CsvContainer();
+    ContentProvider.LoadFromCsv('/csv/de-DE.csv', csvContainer);
 
     let computedStyle = getComputedStyle(document.documentElement);
     var metaTag = document.createElement('meta');

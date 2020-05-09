@@ -99,7 +99,7 @@ class GridBoard {
         let myrng = new Math.seedrandom(seedValue);
     
         let indexArray = [];
-        for (let i = startIndex; i < lastIndex; i++) {
+        for (let i = startIndex; i <= lastIndex; i++) {
             indexArray.push(i);
         }
     
@@ -182,32 +182,59 @@ class Decoder extends GridBoard{
     applyTextToTiles(randomizedIndexes, textArray) {
         for (let i = 0; i < this.TileCount; i++) {
             let selectedTile = this.Tiles[i];
-            let index = randomizedIndexes[i];
+            let index = randomizedIndexes[i % randomizedIndexes.length];
             selectedTile.textContent = textArray[index];
         }
     }
 }
 
-class TileContentProvider{
-    constructor(){
-        this.csvArray;        
+class CsvContainer{
+    
+    static States = 
+    {
+        Empty: "csv_container_is_empty",
+        Loaded: "csv_container_is_loaded",
     }
     
-    get CsvContent(){
-        return this.csvArray;
+    constructor(){
+        this.contentArray;    
+        this.sourcePath;    
+    }
+    
+    get Content(){
+        return this.contentArray;
     }
 
-    set CsvContent(value){
-        this.csvArray = value;
+    set Content(value){
+        this.contentArray = value;
     }
 
+    get SourcePath(){
+        return this.sourcePath;
+    }
+
+    set SourcePath(value){
+        this.sourcePath = value;
+    }
+
+    get Status(){
+        return (!this.Content || !this.SourcePath) ? CsvContainer.States.Empty : CsvContainer.States.Loaded;
+    }
+}
+
+class ContentProvider{
+    constructor(){
+            
+    }
+    
     //csv
-    LoadFromCsv(simpleCsvReader, path) {     
+    static LoadFromCsv(path, csvContainer) {     
         let objXMLHttpRequest = new XMLHttpRequest();       
         objXMLHttpRequest.onreadystatechange = function () {
             if (objXMLHttpRequest.readyState === 4) {
                 if (objXMLHttpRequest.status === 200) {                
-                    simpleCsvReader.CsvContent = TileContentProvider.csvToArray(objXMLHttpRequest.responseText);
+                    csvContainer.Content = ContentProvider.csvToArray(objXMLHttpRequest.responseText);
+                    csvContainer.SourcePath = path;
                 } else {
                     console.debug('Error Code: ' + objXMLHttpRequest.status);
                     console.debug('Error Message: ' + objXMLHttpRequest.statusText);

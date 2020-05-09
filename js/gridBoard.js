@@ -177,7 +177,7 @@ class Decoder extends GridBoard{
 
     set AssassinCount(value){
         this._assassinCount = value;
-        this.applyGridBoardSeed(DecoderSeed);
+        this.applyGridBoardSeed(this.DecoderSeed);
     }
 
     get StartingTeamColor(){

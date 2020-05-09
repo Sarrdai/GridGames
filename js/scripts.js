@@ -131,7 +131,7 @@ function onSessionValueChanged(value){
 }
 
 function onRandomSessionButtonClicked() {
-    let newSession = Math.random().toString();
+    let newSession = (Math.random() * 10e18).toString();
     document.getElementById("sessionValueInput").value = newSession;    
     onSessionValueChanged(newSession);
 }

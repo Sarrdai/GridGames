@@ -1,5 +1,5 @@
 :root {
-    --civilian-color: rgb(204, 184, 141);
+    --civilian-color: rgb(228, 201, 143);
     --team1-color: rgb(33, 105, 199);
     --team2-color: rgb(184, 56, 33);
     --assassin-color: rgb(35, 37, 37);
@@ -26,7 +26,6 @@
     display: table-cell;
     table-layout:fixed;
     vertical-align: middle;
-    /*font-weight: bold;*/
     font-family: Arial, Helvetica, sans-serif;
     word-break: break-all;
   }

@@ -20,6 +20,15 @@
 
     <!-- decoder tiles -->
     <h1>Decoder Game</h1>
+     <!--session area-->
+     <h2>Game Session</h2>
+     <div class="sliderContainer">
+         <input type="text" id="sessionValueInput" name="sessionValueInput" placeholder="Session" oninput="onSessionValueChanged(this.value)"
+             onchange="onSessionValueChanged(this.value)">
+         <br>
+         <button id="randomSessionButton" onclick="onRandomSessionButtonClicked()">Zufällige Session</button>
+     </div>
+
     <div class="grid-container" id="decoder-grid-container">
     </div>
     <br>
@@ -54,14 +63,7 @@
             oninput="onAssassinCountInputChanged(this.value)" onchange="onAssassinCountInputChanged(this.value)">
     </div>
 
-      <!--session area-->
-      <h2>Game Session</h2>
-      <div class="sliderContainer">
-          <input type="text" id="sessionValueInput" name="sessionValueInput" oninput="onSessionValueChanged(this.value)"
-              onchange="onSessionValueChanged(this.value)">
-          <br>
-          <button id="randomSessionButton" onclick="onRandomSessionButtonClicked()">Zufällige Session</button>
-      </div>
+     
 </body>
 
 </html>

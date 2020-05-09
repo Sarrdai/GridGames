@@ -4,43 +4,26 @@ const assassinString= "Assassine: "
 
 var contentProvider;
 var csvContainer;
+var decoder;
 
 function updateGridBoard() {
-    
-    let columnCount = localStorage.columnCount;
-    let rowCount = localStorage.rowCount;
-    let decoderSeedValue = localStorage.decoderSeedValue;
-    let session = localStorage.session;
 
-    decoder = new Decoder(columnCount, rowCount);
-    if(csvContainer.Status == CsvContainer.States.Loaded){
-        decoder.WordList = csvContainer.Content;
-    }
-    
-    
-    let grid = decoder.Board;
-
-    replaceGameBoard(grid); 
-
-    if(localStorage.session != ""){
-        decoder.applySessionId(session);
-    }
-    
-    if(localStorage.decoderSeedValue != ""){
-        let startingTeamColor = decoder.applyGridBoardSeed(decoderSeedValue);
-        document.getElementById("startingTeam").style.backgroundColor = startingTeamColor; 
-    }else{
-        document.getElementById("startingTeam").style.backgroundColor = null;
-    }
-    
-    updateUrl();
     return false;
 }
 
 function initialize() {
     
+    decoder = new Decoder(5, 5);
+    decoder.OnBoardChanged = replaceGameBoard;
+
+    var onFinished = function(csvContainer){
+        if(csvContainer.Status == CsvContainer.States.Loaded){
+            decoder.WordList = csvContainer.Content;
+        }
+    }
+
     csvContainer = new CsvContainer();
-    ContentProvider.LoadFromCsv('/csv/de-DE.csv', csvContainer);
+    ContentProvider.LoadFromCsv('/csv/de-DE.csv', csvContainer, onFinished);
 
     let computedStyle = getComputedStyle(document.documentElement);
     var metaTag = document.createElement('meta');
@@ -53,105 +36,98 @@ function initialize() {
     var assassinCount = getUrlVars()["assassinCount"];
     var decoderSeedValue = getUrlVars()["decoderSeedValue"];
     var session = getUrlVars()["session"];
-    if(rowCount !== undefined && columnCount !== undefined && assassinCount != undefined){
-        localStorage.rowCount = rowCount;
-        localStorage.columnCount = columnCount;
-        localStorage.assassinCount = assassinCount;        
-    }
 
-    if(session != undefined){
-        localStorage.session = session;
-    }
-
-    if(decoderSeedValue != undefined){
-        localStorage.decoderSeedValue = decoderSeedValue;
-    }
-
-    let rowCountElement = document.getElementById("rowCount");
-    if (localStorage.rowCount) {
-        rowCountElement.value = localStorage.rowCount;
-    }
-    onRowCountInputChanged(rowCountElement.value)
-
-    let columnCountElement = document.getElementById("columnCount");
-    if (localStorage.columnCount) {
-        columnCountElement.value = localStorage.columnCount;
-
-    }
-    onColumnCountInputChanged(columnCountElement.value);
-
-    
-    let sessionValueElement = document.getElementById("sessionValueInput");
-    if (localStorage.session) {
-        sessionValueElement.value = localStorage.session;
-    } else {
-        sessionValueElement.value = Math.random();
-    }
-    onSessionValueChanged(sessionValueElement.value);
-
-
-    let decoderSeedValueElement = document.getElementById("decoderSeedValueInput");
-    if (localStorage.decoderSeedValue) {
-        decoderSeedValueElement.value = localStorage.decoderSeedValue;
-    }
-    onGridBoardSeedValueChanged(decoderSeedValueElement.value);
-
-    let assassinCountElement = document.getElementById("assassinCount");
-    if (localStorage.assassinCount) {
-        assassinCountElement.value = localStorage.assassinCount;
-    }
-    onAssassinCountInputChanged(assassinCountElement.value);
-}
-
-function replaceGameBoard(grid){
-    let gridContainer = document.getElementById("decoder-grid-container");
-    gridContainer.innerHTML = "";
-    gridContainer.appendChild(grid);
-}
-
-function getAssassinSetting() {
-    let assassinSetupRadioGroup = document.getElementsByName("assassinSetup")
-    var selectedSetting;
-
-    for (let i = 0; i < assassinSetupRadioGroup.length; i++) {
-        if (assassinSetupRadioGroup[i].checked) {
-            selectedSetting = assassinSetupRadioGroup[i].value;
+    if(rowCount != undefined){
+        onRowCountInputChanged(rowCount);
+    }else{
+        if(localStorage.rowCount != undefined){
+            
+            onRowCountInputChanged(localStorage.rowCount);
+        }else{            
+            
+            onRowCountInputChanged(Decoder.DefaultValues.Rows);
         }
     }
 
-    return selectedSetting;
-}
+    if(columnCount != undefined){
+        onColumnCountInputChanged(columnCount);
+    }else{
+        if(localStorage.columnCount != undefined){
+            onColumnCountInputChanged(localStorage.columnCount);
+        }else{
+            onColumnCountInputChanged(Decoder.DefaultValues.Columns)
+        }
+    }
 
+    if(assassinCount != undefined){
+        onAssassinCountInputChanged(assassinCount);
+    }else{
+        if(localStorage.assassinCount != undefined){            
+            onAssassinCountInputChanged(localStorage.assassinCount);
+        }else{
+            onAssassinCountInputChanged(Decoder.DefaultValues.Assassins)
+        }
+    }
+
+    if(decoderSeedValue != undefined){
+        onGridBoardSeedValueChanged(decoderSeedValue);
+    }else{
+        if(localStorage.decoderSeedValue != undefined){
+            onGridBoardSeedValueChanged(localStorage.decoderSeedValue);
+        }
+    }
+
+    if(session != undefined){
+        onSessionValueChanged(session);
+    }else{
+        if(localStorage.session != undefined){
+            onSessionValueChanged(localStorage.session)
+        }
+    }
+
+    updateUrl();
+}
 
 function onRowCountInputChanged(value) {
     localStorage.rowCount = Number(value);
     let rowCountText = document.getElementById("rowCountText");
     rowCountText.innerText = rowString + value
-    updateGridBoard();
+    setInputValueById("rowCount", value);
+    updateUrl();
+    decoder.Rows = value;
 }
 
 function onColumnCountInputChanged(value) {
     localStorage.columnCount = Number(value);
     let columnCountText = document.getElementById("columnCountText");
-    columnCountText.innerText = columnString + value
-    updateGridBoard();
+    columnCountText.innerText = columnString + value    
+    setInputValueById("columnCount", value);
+    updateUrl();
+    decoder.Columns = value;
 }
 
 function onAssassinCountInputChanged(value) {
     localStorage.assassinCount = Number(value);
     let assassinCountText = document.getElementById("assassinCountText");
     assassinCountText.innerText = assassinString + value
-    updateGridBoard();
+    setInputValueById("assassinCount", value);
+    decoder.assassinCount = value;
+    updateUrl();
 }
 
 function onGridBoardSeedValueChanged(value){
-    localStorage.decoderSeedValue = value.toUpperCase();
-    updateGridBoard();
+    localStorage.decoderSeedValue = value.toUpperCase();    
+    setInputValueById("decoderSeedValueInput", value);
+    decoder.DecoderSeed = value;
+    document.getElementById("startingTeam").style.backgroundColor = decoder.StartingTeamColor;   
+    updateUrl();
 }
 
 function onSessionValueChanged(value){
     localStorage.session = value;
-    updateGridBoard();
+    setInputValueById("sessionValueInput", value);
+    decoder.Session = value;
+    updateUrl();
 }
 
 function onRandomSessionButtonClicked() {
@@ -168,6 +144,11 @@ function getUrlVars() {
     return vars;
 }
 
+function setInputValueById(id, value){
+    let slider = document.getElementById(id);
+    slider.value = value;
+    }
+
 function getUrlWithCurrentSettings(){
     var url = new URL(window.location.href);
     var search_params = url.searchParams;
@@ -183,6 +164,25 @@ function getUrlWithCurrentSettings(){
 function updateUrl(){    
     let url = getUrlWithCurrentSettings();
     window.history.pushState({path:url.toString()},'',url.toString());
+}
+
+function replaceGameBoard(){
+    let gridContainer = document.getElementById("decoder-grid-container");
+    gridContainer.innerHTML = "";
+    gridContainer.appendChild(decoder.Board);
+}
+
+function getAssassinSetting() {
+    let assassinSetupRadioGroup = document.getElementsByName("assassinSetup")
+    var selectedSetting;
+
+    for (let i = 0; i < assassinSetupRadioGroup.length; i++) {
+        if (assassinSetupRadioGroup[i].checked) {
+            selectedSetting = assassinSetupRadioGroup[i].value;
+        }
+    }
+
+    return selectedSetting;
 }
 
 

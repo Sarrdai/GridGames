@@ -18,22 +18,13 @@ class GridBoard {
         
         this._columns;
         this._rows;
-        this._board;
-
-        this.computedStyle = getComputedStyle(document.documentElement);
-        this.TileColors = {
-
-            Team2: this.computedStyle.getPropertyValue("--team2-color"),
-            Team1: this.computedStyle.getPropertyValue("--team1-color"),
-            Assassin: this.computedStyle.getPropertyValue("--assassin-color"),
-        
-        };      
+        this._board;       
+        this._onBoardChanged; 
         
         this._columns = columnCount;
         this._rows = rowCount;
 
-        this._board = this.updateBoardGrid();
-        this.addBoardTiles()
+        this.updateBoardGrid();        
     }
 
     get Rows()
@@ -41,9 +32,22 @@ class GridBoard {
             return this._rows;
         }
 
+    set Rows(value)
+    {
+        this._rows = value;
+        this.updateBoardGrid();
+    }
+
+
     get Columns()
         {
             return this._columns;
+        }
+
+        set Columns(value)
+        {
+            this._columns = value;
+            this.updateBoardGrid();
         }
 
     get TileCount()
@@ -57,6 +61,10 @@ class GridBoard {
 
     get Tiles() {
         return this.Board.childNodes;
+    }
+
+    set OnBoardChanged(value){
+        this._onBoardChanged = value;
     }
    
     addBoardTiles() {
@@ -78,11 +86,14 @@ class GridBoard {
     }
 
     updateBoardGrid() {
-        let grid = document.createElement("div")
-        grid.setAttribute("id", GridBoard.Ids.BoardGame)
-        grid.setAttribute("class", GridBoard.Class.BoardGame)
-        grid.style.gridTemplateColumns = `repeat( ${this.Columns}, auto)`;
-        return grid;
+        this._board = document.createElement("div")
+        this._board.setAttribute("id", GridBoard.Ids.BoardGame)
+        this._board.setAttribute("class", GridBoard.Class.BoardGame)
+        this._board.style.gridTemplateColumns = `repeat( ${this.Columns}, auto)`;
+        this.addBoardTiles()      
+        if(this._onBoardChanged != undefined){
+            this._onBoardChanged();
+        }
     }
     
     createTile(index, tileSizeInVW) {
@@ -110,9 +121,61 @@ class GridBoard {
 }
 
 class Decoder extends GridBoard{
+    
+    static DefaultValues =
+        {
+            Rows: 5,
+            Columns: 5,
+            Assassins: 1,
+        }      
+    
     constructor(columSize, rowSize){
         super(columSize, rowSize);
         this.wordList;
+        this._assassinCount;
+        this._session;
+        this._decoderSeed;
+        this._startingTeamColor;
+
+        this.computedStyle = getComputedStyle(document.documentElement);
+        this.TileColors = {
+
+            Team2: this.computedStyle.getPropertyValue("--team2-color"),
+            Team1: this.computedStyle.getPropertyValue("--team1-color"),
+            Assassin: this.computedStyle.getPropertyValue("--assassin-color"),
+        
+        };      
+    }
+
+    get DecoderSeed(){
+        return this._decoderSeed;
+    }
+
+    set DecoderSeed(value){
+        this._decoderSeed = value;
+        this.applyGridBoardSeed(value);
+    }
+
+    get Session(){
+        return this._session;
+    }
+
+    set Session(value){
+        this._session = value;
+        this.applySessionId(value);
+    }
+
+    get AssassinCount(){
+        return this._assassinCount;        
+    }
+
+    set AssassinCount(value){
+        this._assassinCount = value;
+        this.applyGridBoardSeed(DecoderSeed);
+    }
+
+    get StartingTeamColor(){
+        return this._startintTeamColor;
     }
 
     get WordList(){
@@ -122,27 +185,47 @@ class Decoder extends GridBoard{
     set WordList(value)
     {
         this.wordList = value;
+        this.applySessionId(this.Session)
+    }
+
+    updateBoardGrid(){
+        super.updateBoardGrid();
+
+        if(this.Session != undefined){
+            this.applySessionId(this.Session);
+        }
+
+        if(this.DecoderSeed != undefined){
+            this.applyGridBoardSeed(this.DecoderSeed);
+        }
     }
 
     //decoder
     applyGridBoardSeed(seedValue) {
+        
+        let allIndexes = [];
+        for(let i = 0; i < this.TileCount; i++){
+            allIndexes.push(i);
+        }
+        this._startingTeamColor = this.colorizeGridBoardTiles(allIndexes, 0, this.TileCount, null);
+
+        if(seedValue != ""){
+            let randomizedIndexes = this.getRandomIndexArray(0, this.TileCount-1, seedValue);
     
-        let randomizedIndexes = this.getRandomIndexArray(0, this.TileCount-1, seedValue);
-    
-        let teamOneTileCounts = Math.round(this.TileCount * 0.36);
-        let teamTwoTileCounts = teamOneTileCounts - 1;
-    
-        let colors = this.getTeamOrder(seedValue);
-    
-        let grid = document.getElementById(GridBoard.Ids.BoardGame);
-        let startIndex = 0;
-        let lastIndexTeamOne = this.colorizeGridBoardTiles(randomizedIndexes, startIndex, teamOneTileCounts, colors[0]);
-        let lastIndexTeamTwo = this.colorizeGridBoardTiles(randomizedIndexes, lastIndexTeamOne + 1, teamTwoTileCounts, colors[1]);
-        let lastIndexAssassin = this.colorizeGridBoardTiles(randomizedIndexes, lastIndexTeamTwo + 1, Number(localStorage.assassinCount), this.TileColors.Assassin);
-    
-        let startingTeamColor = colors[0];
-        return startingTeamColor;
+            let teamOneTileCounts = Math.round(this.TileCount * 0.36);
+            let teamTwoTileCounts = teamOneTileCounts - 1;
+        
+            let colors = this.getTeamOrder(seedValue);
+        
+            let startIndex = 0;
+            let lastIndexTeamOne = this.colorizeGridBoardTiles(randomizedIndexes, startIndex, teamOneTileCounts, colors[0]);
+            let lastIndexTeamTwo = this.colorizeGridBoardTiles(randomizedIndexes, lastIndexTeamOne, teamTwoTileCounts, colors[1]);
+            let lastIndexAssassin = this.colorizeGridBoardTiles(randomizedIndexes, lastIndexTeamTwo, Number(localStorage.assassinCount), this.TileColors.Assassin);
+        
+            this._startingTeamColor = colors[0];
+        
     }
+}
     
     //decoder
     getTeamOrder(seedValue) {
@@ -228,13 +311,14 @@ class ContentProvider{
     }
     
     //csv
-    static LoadFromCsv(path, csvContainer) {     
+    static LoadFromCsv(path, csvContainer, onFinished) {     
         let objXMLHttpRequest = new XMLHttpRequest();       
         objXMLHttpRequest.onreadystatechange = function () {
             if (objXMLHttpRequest.readyState === 4) {
                 if (objXMLHttpRequest.status === 200) {                
                     csvContainer.Content = ContentProvider.csvToArray(objXMLHttpRequest.responseText);
                     csvContainer.SourcePath = path;
+                    onFinished(csvContainer);
                 } else {
                     console.debug('Error Code: ' + objXMLHttpRequest.status);
                     console.debug('Error Message: ' + objXMLHttpRequest.statusText);

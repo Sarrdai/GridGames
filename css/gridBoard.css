@@ -28,6 +28,7 @@
     vertical-align: middle;
     font-family: Arial, Helvetica, sans-serif;
     word-break: break-all;
+    user-select: none;
   }
 
 #startingTeam {

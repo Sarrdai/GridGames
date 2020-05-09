@@ -194,6 +194,11 @@ class Decoder extends GridBoard{
         this.applySessionId(this.Session)
     }
 
+    get SpyMasterMode()
+    {
+        return (this.DecoderSeed != "" && this.DecoderSeed != undefined)
+    }
+
     updateBoardGrid(){
         super.updateBoardGrid();
 
@@ -211,7 +216,7 @@ class Decoder extends GridBoard{
         
         this.clearBoardColors();
 
-        if(seedValue != "" && seedValue != undefined){
+        if(this.SpyMasterMode){
             this.disableTileClick();
             
             let randomizedIndexes = this.getRandomIndexArray(0, this.TileCount-1, seedValue);
@@ -292,7 +297,7 @@ static getNextColor(currentColor){
     //decoder
     applySessionId(session) {
         
-        if(this.DecoderSeed == "" || this.DecoderSeed == undefined){
+        if(!this.SpyMasterMode){
         this.clearBoardColors();
         }
 

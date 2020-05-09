@@ -13,7 +13,7 @@ function updateGridBoard() {
 
 function initialize() {
     
-    decoder = new Decoder(5, 5);
+    decoder = new Decoder();
     decoder.OnBoardChanged = replaceGameBoard;
 
     var onFinished = function(csvContainer){

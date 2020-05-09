@@ -1,5 +1,3 @@
-
-
 class GridBoard {
 
     static Ids =
@@ -129,8 +127,8 @@ class Decoder extends GridBoard{
             Assassins: 1,
         }      
     
-    constructor(columSize, rowSize){
-        super(columSize, rowSize);
+    constructor(){
+        super(Decoder.DefaultValues.Columns, Decoder.DefaultValues.Rows);
         this.wordList;
         this._assassinCount;
         this._session;

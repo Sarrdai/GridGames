@@ -9,10 +9,12 @@ class GridBoard {
         {
             BoardGame: "boardGame",
             Tile: "tile",
+            TileText: "tileText",
         }            
 
     constructor(columnCount, rowCount) {
         this.TileName = "tile";
+        this.TileTextName = "tileText"
         
         this._columns;
         this._rows;
@@ -100,6 +102,13 @@ class GridBoard {
         newTile.setAttribute("id", this.TileName + index)
         newTile.style.width = tileSizeInVW * 80 + "vw";
         newTile.style.height = tileSizeInVW * 80 + "vw";
+
+        var newTileText = document.createElement("div");
+        newTileText.setAttribute("class", GridBoard.Class.TileText)
+        newTileText.setAttribute("id", this.TileTextName + index)
+
+        newTile.appendChild(newTileText);
+
         return newTile;
     }
     
@@ -240,7 +249,6 @@ class Decoder extends GridBoard{
             console.log("applySessionId was called but there is no WordList available.")
             return
         }else{
-            console.log("Applying words here")
             let randomizedIndexes = this.getRandomIndexArray(0, this.WordList.length -1, session);
             this.applyTextToTiles(randomizedIndexes, this.WordList)        
         }
@@ -262,9 +270,9 @@ class Decoder extends GridBoard{
     //decoder
     applyTextToTiles(randomizedIndexes, textArray) {
         for (let i = 0; i < this.TileCount; i++) {
-            let selectedTile = this.Tiles[i];
+            let selectedTileText = this.Tiles[i].childNodes[0];
             let index = randomizedIndexes[i % randomizedIndexes.length];
-            selectedTile.textContent = textArray[index];
+            selectedTileText.textContent = textArray[index];
         }
     }
 }

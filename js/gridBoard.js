@@ -214,8 +214,12 @@ class Decoder extends GridBoard{
 
     //decoder
     applyGridBoardSeed(seedValue) {
-        
+                
         this.clearBoardColors();
+
+        if(!this.isValidInput(seedValue)){            
+            return null;
+        }
 
         if(this.SpyMasterMode){
             this.disableTileClick();
@@ -297,10 +301,16 @@ static getNextColor(currentColor){
     
     //decoder
     applySessionId(session) {
-        
+       
+        if(!this.isValidInput(session)){
+            this.clearBoardColors();
+            this.applyTextToTiles([0], [null]);
+            return null;
+        }
+
         if(!this.SpyMasterMode){
         this.clearBoardColors();
-        }
+        }        
 
         if(!this.WordList){
             console.log("applySessionId was called but there is no WordList available.")
@@ -331,6 +341,10 @@ static getNextColor(currentColor){
             let index = randomizedIndexes[i % randomizedIndexes.length];
             selectedTileText.textContent = textArray[index];
         }
+    }
+
+    isValidInput(value){
+        return (value != null && value != undefined && value != "");
     }
 }
 

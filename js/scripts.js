@@ -8,7 +8,7 @@ var decoder;
 
 //init
 function initialize() {
-    
+    localStorage.clear();
     decoder = new Decoder();
     decoder.OnBoardChanged = replaceGameBoard;
 
@@ -142,6 +142,7 @@ function setInputValueById(id, value){
 function getUrlVars() {
     var vars = {};
     var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        value = value == "undefined" ? undefined : value;
         vars[key] = value;
     });
     return vars;
@@ -155,11 +156,11 @@ function updateUrl(){
 function getUrlWithCurrentSettings(){
     var url = new URL(window.location.href);
     var search_params = url.searchParams;
-    search_params.set('rowCount', localStorage.rowCount);
-    search_params.set('columnCount', localStorage.columnCount);
-    search_params.set('assassinCount', localStorage.assassinCount);
-    search_params.set('session', localStorage.session);
-    search_params.set('decoderSeedValue', localStorage.decoderSeedValue);
+    search_params.set('rowCount', decoder.Rows);
+    search_params.set('columnCount', decoder.Columns);
+    search_params.set('assassinCount', decoder.AssassinCount);
+    search_params.set('session', decoder.Session);
+    search_params.set('decoderSeedValue', decoder.DecoderSeed);
     url.searchParams = search_params;
     return url;
 }

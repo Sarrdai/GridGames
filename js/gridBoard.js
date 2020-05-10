@@ -158,6 +158,7 @@ class Decoder extends GridBoard{
     }
 
     set DecoderSeed(value){
+        if(value == undefined){return;}
         this._decoderSeed = value.toUpperCase();
         this.applyGridBoardSeed(this._decoderSeed);
     }

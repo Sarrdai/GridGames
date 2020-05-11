@@ -1,6 +1,6 @@
 const columnString = "Spalten: "
 const rowString = "Zeilen: "
-const assassinString= "Assassine: "
+const assassinString = "Assassine: "
 
 var contentProvider;
 var csvContainer;
@@ -12,8 +12,8 @@ function initialize() {
     decoder = new Decoder();
     decoder.OnBoardChanged = replaceGameBoard;
 
-    var onFinished = function(csvContainer){
-        if(csvContainer.Status == CsvContainer.States.Loaded){
+    var onFinished = function (csvContainer) {
+        if (csvContainer.Status == CsvContainer.States.Loaded) {
             decoder.WordList = csvContainer.Content;
         }
     }
@@ -33,50 +33,50 @@ function initialize() {
     var decoderSeedValue = getUrlVars()["decoderSeedValue"];
     var session = getUrlVars()["session"];
 
-    if(rowCount != undefined){
+    if (rowCount != undefined) {
         onRowCountInputChanged(rowCount);
-    }else{
-        if(localStorage.rowCount != undefined){
-            
+    } else {
+        if (localStorage.rowCount != undefined) {
+
             onRowCountInputChanged(localStorage.rowCount);
-        }else{            
-            
+        } else {
+
             onRowCountInputChanged(Decoder.DefaultValues.Rows);
         }
     }
 
-    if(columnCount != undefined){
+    if (columnCount != undefined) {
         onColumnCountInputChanged(columnCount);
-    }else{
-        if(localStorage.columnCount != undefined){
+    } else {
+        if (localStorage.columnCount != undefined) {
             onColumnCountInputChanged(localStorage.columnCount);
-        }else{
+        } else {
             onColumnCountInputChanged(Decoder.DefaultValues.Columns)
         }
     }
 
-    if(assassinCount != undefined){
+    if (assassinCount != undefined) {
         onAssassinCountInputChanged(assassinCount);
-    }else{
-        if(localStorage.assassinCount != undefined){            
+    } else {
+        if (localStorage.assassinCount != undefined) {
             onAssassinCountInputChanged(localStorage.assassinCount);
-        }else{
+        } else {
             onAssassinCountInputChanged(Decoder.DefaultValues.Assassins)
         }
     }
 
-    if(decoderSeedValue != undefined){
+    if (decoderSeedValue != undefined) {
         onGridBoardSeedValueChanged(decoderSeedValue);
-    }else{
-        if(localStorage.decoderSeedValue != undefined){
+    } else {
+        if (localStorage.decoderSeedValue != undefined) {
             onGridBoardSeedValueChanged(localStorage.decoderSeedValue);
         }
     }
 
-    if(session != undefined){
+    if (session != undefined) {
         onSessionValueChanged(session);
-    }else{
-        if(localStorage.session != undefined){
+    } else {
+        if (localStorage.session != undefined) {
             onSessionValueChanged(localStorage.session)
         }
     }
@@ -97,7 +97,7 @@ function onRowCountInputChanged(value) {
 function onColumnCountInputChanged(value) {
     localStorage.columnCount = Number(value);
     let columnCountText = document.getElementById("columnCountText");
-    columnCountText.innerText = columnString + value    
+    columnCountText.innerText = columnString + value
     setInputValueById("columnCount", value);
     updateUrl();
     decoder.Columns = value;
@@ -112,15 +112,15 @@ function onAssassinCountInputChanged(value) {
     updateUrl();
 }
 
-function onGridBoardSeedValueChanged(value){
-    localStorage.decoderSeedValue = value;    
+function onGridBoardSeedValueChanged(value) {
+    localStorage.decoderSeedValue = value;
     setInputValueById("decoderSeedValueInput", value);
     decoder.DecoderSeed = value;
-    document.getElementById("startingTeam").style.backgroundColor = decoder.StartingTeamColor;   
+    document.getElementById("startingTeam").style.backgroundColor = decoder.StartingTeamColor;
     updateUrl();
 }
 
-function onSessionValueChanged(value){
+function onSessionValueChanged(value) {
     localStorage.session = value;
     setInputValueById("sessionValueInput", value);
     decoder.Session = value;
@@ -129,31 +129,31 @@ function onSessionValueChanged(value){
 
 function onRandomSessionButtonClicked() {
     let newSession = (Math.random() * 10e18).toString();
-    document.getElementById("sessionValueInput").value = newSession;    
+    document.getElementById("sessionValueInput").value = newSession;
     onSessionValueChanged(newSession);
 }
 
-function setInputValueById(id, value){
+function setInputValueById(id, value) {
     let slider = document.getElementById(id);
     slider.value = value;
-    }
+}
 
 //url
 function getUrlVars() {
     var vars = {};
-    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
         value = value == "undefined" ? undefined : value;
         vars[key] = value;
     });
     return vars;
 }
 
-function updateUrl(){    
+function updateUrl() {
     let url = getUrlWithCurrentSettings();
-    window.history.pushState({path:url.toString()},'',url.toString());
+    window.history.pushState({ path: url.toString() }, '', url.toString());
 }
 
-function getUrlWithCurrentSettings(){
+function getUrlWithCurrentSettings() {
     var url = new URL(window.location.href);
     var search_params = url.searchParams;
     search_params.set('rowCount', decoder.Rows);
@@ -166,7 +166,7 @@ function getUrlWithCurrentSettings(){
 }
 
 //callbacks
-function replaceGameBoard(){
+function replaceGameBoard() {
     let gridContainer = document.getElementById("decoder-grid-container");
     gridContainer.innerHTML = "";
     gridContainer.appendChild(decoder.Board);

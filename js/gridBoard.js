@@ -217,7 +217,8 @@ class Decoder extends GridBoard{
                 
         this.clearBoardColors();
 
-        if(!this.isValidInput(seedValue)){            
+        if(!this.isValidInput(seedValue)){     
+            this.enableTileClick();       
             return null;
         }
 
@@ -236,11 +237,8 @@ class Decoder extends GridBoard{
             let lastIndexTeamTwo = this.colorizeGridBoardTiles(randomizedIndexes, lastIndexTeamOne, teamTwoTileCounts, colors[1]);
             let lastIndexAssassin = this.colorizeGridBoardTiles(randomizedIndexes, lastIndexTeamTwo, Number(localStorage.assassinCount), Decoder.TileColors.Assassin);
         
-            this._startingTeamColor = colors[0];
-        
-    }else{
-        this.enableTileClick();
-    }    
+            this._startingTeamColor = colors[0];        
+    }   
 }
 
 clearBoardColors(){

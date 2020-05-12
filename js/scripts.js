@@ -117,6 +117,7 @@ function onGridBoardSeedValueChanged(value) {
     setInputValueById("decoderSeedValueInput", value);
     decoder.DecoderSeed = value;
     document.getElementById("startingTeam").style.backgroundColor = decoder.StartingTeamColor;
+    //use decoder.WordListsByTeam here. Show as table or similar
     updateUrl();
 }
 

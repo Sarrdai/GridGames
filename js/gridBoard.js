@@ -12,8 +12,7 @@ class GridBoard {
             TileText: "tileText",
         }
 
-    constructor(columnCount, rowCount) {
-        this.TileName = "tile";
+    constructor(columnCount, rowCount) {        
         this.TileTextName = "tileText"
 
         this._columns;
@@ -23,6 +22,7 @@ class GridBoard {
 
         this._columns = columnCount;
         this._rows = rowCount;
+        this._tiles = [];
 
         this.updateBoardGrid();
     }
@@ -55,7 +55,7 @@ class GridBoard {
     }
 
     get Tiles() {
-        return this.Board.childNodes;
+        return this._tiles;
     }
 
     set OnBoardChanged(value) {
@@ -74,9 +74,11 @@ class GridBoard {
         let tileWidthInPercent = tileSizeInPx / width;
 
         let count = this.Columns * this.Rows;
+        this._tiles = [];
         for (let i = 0; i < count; i++) {
             let newTile = this.createTile(i, tileWidthInPercent);
-            this.Board.appendChild(newTile);
+            this._tiles.push(newTile);
+            this.Board.appendChild(newTile.Html);
         }
     }
 
@@ -92,19 +94,7 @@ class GridBoard {
     }
 
     createTile(index, tileSizeInVW) {
-        var newTile = document.createElement("div");
-        newTile.setAttribute("class", GridBoard.Class.Tile)
-        newTile.setAttribute("id", this.TileName + index)
-        newTile.style.width = tileSizeInVW * 80 + "vw";
-        newTile.style.height = tileSizeInVW * 80 + "vw";
-
-        var newTileText = document.createElement("div");
-        newTileText.setAttribute("class", GridBoard.Class.TileText)
-        newTileText.setAttribute("id", this.TileTextName + index)
-
-        newTile.appendChild(newTileText);
-
-        return newTile;
+        return new Tile(index, tileSizeInVW);
     }
 
     //decoder
@@ -146,6 +136,7 @@ class Decoder extends GridBoard {
         this._session;
         this._decoderSeed;
         this._startingTeamColor;
+        this._wordListByTeam = new Array(3);
     }
 
     get DecoderSeed() {
@@ -182,11 +173,15 @@ class Decoder extends GridBoard {
 
     get WordList() {
         return this.wordList;
-    }
+    }    
 
     set WordList(value) {
         this.wordList = value;
         this.applySessionId(this.Session)
+    }
+
+    get WordListsByTeam() {
+        return _wordListByTeam;
     }
 
     get SpyMasterMode() {
@@ -194,15 +189,13 @@ class Decoder extends GridBoard {
     }
 
     updateBoardGrid() {
-        super.updateBoardGrid();
+        super.updateBoardGrid();        
 
         if (this.Session != undefined && this.Session != "") {
             this.applySessionId(this.Session);
         }
 
-
-        this.applyGridBoardSeed(this.DecoderSeed);
-
+        this.applyGridBoardSeed(this.DecoderSeed);        
     }
 
     //decoder
@@ -229,6 +222,10 @@ class Decoder extends GridBoard {
             let lastIndexTeamOne = this.colorizeGridBoardTiles(randomizedIndexes, startIndex, teamOneTileCounts, colors[0]);
             let lastIndexTeamTwo = this.colorizeGridBoardTiles(randomizedIndexes, lastIndexTeamOne, teamTwoTileCounts, colors[1]);
             let lastIndexAssassin = this.colorizeGridBoardTiles(randomizedIndexes, lastIndexTeamTwo, Number(localStorage.assassinCount), Decoder.TileColors.Assassin);
+
+            this._wordListByTeam[0] = this.TilesToList(this.getWordsPerTeam(colors[0]))
+            this._wordListByTeam[1] = this.TilesToList(this.getWordsPerTeam(colors[1]))  
+            this._wordListByTeam[2] = this.TilesToList(this.getWordsPerTeam(null))                                  
 
             this._startingTeamColor = colors[0];
         }
@@ -318,8 +315,8 @@ class Decoder extends GridBoard {
         let lastIndex = startIndex + indexCount;
         lastIndex = lastIndex > randomizedIndexes.length ? randomizedIndexes.length : lastIndex;
         for (let i = startIndex; i < lastIndex; i++) {
-            let selectedTile = this.Tiles[randomizedIndexes[i]];
-            selectedTile.style.backgroundColor = color;
+            let selectedTile = this._tiles[randomizedIndexes[i]];
+            selectedTile.TeamColor = color;
         }
         return lastIndex;
     }
@@ -327,14 +324,85 @@ class Decoder extends GridBoard {
     //decoder
     applyTextToTiles(randomizedIndexes, textArray) {
         for (let i = 0; i < this.TileCount; i++) {
-            let selectedTileText = this.Tiles[i].childNodes[0];
+            let selectedTile = this._tiles[i];
             let index = randomizedIndexes[i % randomizedIndexes.length];
-            selectedTileText.textContent = textArray[index];
+            selectedTile.Text = textArray[index];
         }
     }
 
     isValidInput(value) {
         return (value != null && value != undefined && value != "");
+    }
+
+    getWordsPerTeam(teamColor){
+        let tilesByTeamColor = [];
+        this.Tiles.forEach(tile => {
+            if(tile.TeamColor == teamColor){
+                tilesByTeamColor.push(tile);
+            }
+        });
+        return tilesByTeamColor;
+    }
+
+    TilesToList(tiles){
+        let list = document.createElement("ul");
+        tiles.forEach(tile => {            
+            list.appendChild(tile.ListItem);            
+        });
+        return list;
+    }
+}
+
+class Tile {
+    constructor(index, tileSizeInVW) {
+        this._teamColor = null;
+        this._text = "";
+        this._index = index;
+
+        this._GridTileHtml = document.createElement("div");
+        this._GridTileHtml.setAttribute("class", GridBoard.Class.Tile)
+        this._GridTileHtml.setAttribute("id", "tile" + index)
+        this._GridTileHtml.style.width = tileSizeInVW * 80 + "vw";
+        this._GridTileHtml.style.height = tileSizeInVW * 80 + "vw";
+
+        var newTileText = document.createElement("div");
+        newTileText.setAttribute("class", GridBoard.Class.TileText)
+        newTileText.setAttribute("id", this.TileTextName + index)
+        this._GridTileHtml.appendChild(newTileText);
+
+        this._listItem = document.createElement("li");
+    }
+
+    get Text(){
+        return this._text;
+    }
+
+    set Text(value){
+     this._text = value;
+     this._GridTileHtml.childNodes[0].textContent = value;
+     this._listItem.textContent = value;
+    }
+
+    get TeamColor(){
+        return this._teamColor;
+    }
+
+    set TeamColor(value){
+     this._teamColor = value;
+     this._GridTileHtml.style.backgroundColor = value;
+     this._listItem.style.color = value;
+    }
+
+    get Index(){
+        return this._index;
+    }
+
+    get Html(){
+        return this._GridTileHtml;
+    }
+
+    get ListItem(){
+        return this._listItem;                         
     }
 }
 

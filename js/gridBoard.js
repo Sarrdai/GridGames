@@ -181,7 +181,7 @@ class Decoder extends GridBoard {
     }
 
     get WordListsByTeam() {
-        return _wordListByTeam;
+        return this._wordListByTeam;
     }
 
     get SpyMasterMode() {
@@ -223,12 +223,21 @@ class Decoder extends GridBoard {
             let lastIndexTeamTwo = this.colorizeGridBoardTiles(randomizedIndexes, lastIndexTeamOne, teamTwoTileCounts, colors[1]);
             let lastIndexAssassin = this.colorizeGridBoardTiles(randomizedIndexes, lastIndexTeamTwo, Number(localStorage.assassinCount), Decoder.TileColors.Assassin);
 
-            this._wordListByTeam[0] = this.TilesToList(this.getWordsPerTeam(colors[0]))
-            this._wordListByTeam[1] = this.TilesToList(this.getWordsPerTeam(colors[1]))  
-            this._wordListByTeam[2] = this.TilesToList(this.getWordsPerTeam(null))                                  
+            let teamsToAdd = [colors[0],colors[1], null]
+            this.addWordsToLists(teamsToAdd);         
 
             this._startingTeamColor = colors[0];
         }
+    }
+
+    addWordsToLists(teamsToAdd){
+        this._wordListByTeam = [];
+        teamsToAdd.forEach(team => {
+            let list = this.TilesToList(this.getWordsPerTeam(team));
+            if(list.childNodes.length > 0){
+                this._wordListByTeam.push(list);
+            }
+        });        
     }
 
     clearBoardColors() {
@@ -263,7 +272,6 @@ class Decoder extends GridBoard {
             tile.style.cursor = null;
         });
     }
-
 
     static getNextColor(currentColor) {
         switch (currentColor) {
@@ -347,7 +355,9 @@ class Decoder extends GridBoard {
     TilesToList(tiles){
         let list = document.createElement("ul");
         tiles.forEach(tile => {            
+           if(tile.Text != null){
             list.appendChild(tile.ListItem);            
+           }            
         });
         return list;
     }
@@ -371,6 +381,9 @@ class Tile {
         this._GridTileHtml.appendChild(newTileText);
 
         this._listItem = document.createElement("li");
+        this._listItem.onclick = function onListWordClick(event){        
+            event.target.style.textDecoration = (event.target.style.textDecoration == "line-through") ? null : "line-through";
+        }
     }
 
     get Text(){
@@ -402,7 +415,7 @@ class Tile {
     }
 
     get ListItem(){
-        return this._listItem;                         
+        return this._listItem;                    
     }
 }
 

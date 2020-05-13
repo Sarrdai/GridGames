@@ -117,7 +117,13 @@ function onGridBoardSeedValueChanged(value) {
     setInputValueById("decoderSeedValueInput", value);
     decoder.DecoderSeed = value;
     document.getElementById("startingTeam").style.backgroundColor = decoder.StartingTeamColor;
-    //use decoder.WordListsByTeam here. Show as table or similar
+    wordListGrid = document.getElementById("wordListGrid");
+    wordListGrid.innerHTML = "";
+    if(decoder.SpyMasterMode){
+        decoder.WordListsByTeam.forEach(element => {
+            wordListGrid.appendChild(element);
+        });
+    }
     updateUrl();
 }
 

@@ -13,6 +13,18 @@
     border: 5px;
 }
 
+.wordList {
+  display: grid;
+  justify-content: center;
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+  grid-template-columns: auto auto auto; 
+  color: var(--civilian-color);  
+  font-size: x-large;  
+  user-select: none;
+  cursor: pointer;
+}
+
 .tile {
     background-color: var(--civilian-color);      
     border-radius: 5px;

@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" type="text/css" href="css/gridBoard.css">
     <link rel="stylesheet" type="text/css" href="css/input.css">
+    <link rel="stylesheet" type="text/css" href="css/sidebar.css">
 
     <!--scripts-->
     <script type="text/javascript" src="js/seedrandom.js"></script>
@@ -17,6 +18,33 @@
 </head>
 
 <body onload="initialize()">  
+
+  <input type="checkbox" class="openSidebarMenu" id="openSidebarMenu">
+  <label for="openSidebarMenu" class="sidebarIconToggle">
+    <div class="spinner diagonal part-1"></div>
+    <div class="spinner horizontal"></div>
+    <div class="spinner diagonal part-2"></div>
+  </label>
+  <div id="sidebarMenu">
+    <ul class="sidebarMenuInner">
+        <li>Einstellungen</li>
+      <li><div class="sliderContainer">
+        <label for="rowCount" id="rowCountText"></label><br>
+        <input type="range" min="3" max="10" value="5" class="slider" id="rowCount"
+            oninput="onRowCountInputChanged(this.value)" onchange="onRowCountInputChanged(this.value)">
+    </div></li>
+    <li><div class="sliderContainer">
+        <label for="columnCount" id="columnCountText"></label><br>
+        <input type="range" min="3" max="10" value="5" class="slider" id="columnCount"
+            oninput="onColumnCountInputChanged(this.value)" onchange="onColumnCountInputChanged(this.value)">
+    </div></li>
+    <li> <div class="sliderContainer">
+        <label for="assassinCount" id="assassinCountText"></label><br>
+        <input type="range" min="0" max="5" value="1" class="slider" id="assassinCount"
+            oninput="onAssassinCountInputChanged(this.value)" onchange="onAssassinCountInputChanged(this.value)">
+    </div></li>
+    </ul>
+  </div>
 
     <!-- decoder tiles -->
     <h1>Decoder Game</h1>
@@ -45,26 +73,6 @@
 
      <h2>Wörter nach Teams</h2>
      <div class = "wordList" id="wordListGrid" style="visibility: hidden"></div>
-
-    <!-- config area-->
-    <h1>Einstellungen</h1>
-    <div class="sliderContainer">
-        <label for="rowCount" id="rowCountText"></label><br>
-        <input type="range" min="3" max="10" value="5" class="slider" id="rowCount"
-            oninput="onRowCountInputChanged(this.value)" onchange="onRowCountInputChanged(this.value)">
-    </div>
-    <br>
-    <div class="sliderContainer">
-        <label for="columnCount" id="columnCountText"></label><br>
-        <input type="range" min="3" max="10" value="5" class="slider" id="columnCount"
-            oninput="onColumnCountInputChanged(this.value)" onchange="onColumnCountInputChanged(this.value)">
-    </div>
-    <br>
-    <div class="sliderContainer">
-        <label for="assassinCount" id="assassinCountText"></label><br>
-        <input type="range" min="0" max="5" value="1" class="slider" id="assassinCount"
-            oninput="onAssassinCountInputChanged(this.value)" onchange="onAssassinCountInputChanged(this.value)">
-    </div>
 
      
 </body>

@@ -223,7 +223,7 @@ class Decoder extends GridBoard {
             let lastIndexTeamTwo = this.colorizeGridBoardTiles(randomizedIndexes, lastIndexTeamOne, teamTwoTileCounts, colors[1]);
             let lastIndexAssassin = this.colorizeGridBoardTiles(randomizedIndexes, lastIndexTeamTwo, Number(localStorage.assassinCount), Decoder.TileColors.Assassin);
 
-            let teamsToAdd = [colors[0],colors[1], null]
+            let teamsToAdd = [Decoder.TileColors.Assassin, colors[0],colors[1], null]
             this.addWordsToLists(teamsToAdd);         
 
             this._startingTeamColor = colors[0];
@@ -403,7 +403,7 @@ class Tile {
     set TeamColor(value){
      this._teamColor = value;
      this._GridTileHtml.style.backgroundColor = value;
-     this._listItem.style.color = value;
+     this._listItem.style.backgroundColor = value;
     }
 
     get Index(){

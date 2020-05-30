@@ -14,17 +14,38 @@
 }
 
 .wordList {
-  display: grid;
-  justify-content: center;
+/*   display: grid;  
   grid-column-gap: 10px;
   grid-row-gap: 10px;
-  grid-template-columns: auto auto auto; 
+  grid-template-columns: auto auto auto;  */
+  justify-content: center;
   color: var(--civilian-color);  
   font-size: x-large;  
   user-select: none;
   cursor: pointer;
   font-family: Arial, Helvetica, sans-serif;
   word-break: break-all;
+  column-count: 4;
+  column-width: 8cm;
+}
+
+.wordList ul{
+  break-inside: avoid-column;
+  margin-top: 0px;
+}
+
+
+.wordList ul li{
+  background-color: var(--civilian-color);      
+    border-radius: 5px;
+    display: table;
+    text-align: center;  
+    min-width: 8cm;
+    color: var(--font-color);
+    margin: 10px;
+    padding: 10px;
+    vertical-align: top;
+    display:inline-block;
 }
 
 .tile {

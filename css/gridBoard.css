@@ -25,7 +25,7 @@
   font-family: Arial, Helvetica, sans-serif;
   word-break: break-all;
   column-count: 4;
-  column-width: 8cm;
+  column-width: 230px;
 }
 
 .wordList ul{
@@ -36,16 +36,17 @@
   padding: 0px;
   display: grid;
   justify-content: center;
+  grid-template-columns: 230px
 }
 
 
 .wordList ul li{
   background-color: var(--civilian-color);      
     border-radius: 5px;
-    display: table;
+    display: inline-block;
     text-align: center;  
-    min-width: 5cm;
-    max-width: 8cm;
+    max-width: 200px;
+    width: 100%;
     color: var(--font-color);
     margin: 10px;
     padding: 5px;

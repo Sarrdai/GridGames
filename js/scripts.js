@@ -88,7 +88,9 @@ function initialize() {
 function onRowCountInputChanged(value) {
     localStorage.rowCount = Number(value);
     let rowCountText = document.getElementById("rowCountText");
-    rowCountText.innerText = rowString + value
+    if(rowCountText){
+        rowCountText.innerText = rowString + value
+    }    
     setInputValueById("rowCount", value);
     updateUrl();
     decoder.Rows = value;
@@ -97,7 +99,9 @@ function onRowCountInputChanged(value) {
 function onColumnCountInputChanged(value) {
     localStorage.columnCount = Number(value);
     let columnCountText = document.getElementById("columnCountText");
-    columnCountText.innerText = columnString + value
+    if(columnCountText){
+        columnCountText.innerText = columnString + value;
+    }
     setInputValueById("columnCount", value);
     updateUrl();
     decoder.Columns = value;
@@ -106,7 +110,9 @@ function onColumnCountInputChanged(value) {
 function onAssassinCountInputChanged(value) {
     localStorage.assassinCount = Number(value);
     let assassinCountText = document.getElementById("assassinCountText");
-    assassinCountText.innerText = assassinString + value
+    if(assassinCountText){
+        assassinCountText.innerText = assassinString + value;
+    }
     setInputValueById("assassinCount", value);
     decoder.AssassinCount = value;
     updateUrl();
@@ -142,7 +148,12 @@ function onRandomSessionButtonClicked() {
 
 function setInputValueById(id, value) {
     let slider = document.getElementById(id);
-    slider.value = value;
+    if(slider){
+        slider.value = value;
+    }else{
+        console.debug("Could not find element with id: " + id)
+    }
+    
 }
 
 //url
